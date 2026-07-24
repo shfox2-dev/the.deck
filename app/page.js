@@ -46,19 +46,6 @@ export default function Home() {
           </div>
         ))}
 
-/*
-        {restCount > 0 && (
-          <div
-            style={{ marginLeft: -54, zIndex: 20 }}
-            className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-white/60
-                       flex items-center justify-center text-center px-2"
-          >
-            <span className="text-xs text-neutral-500">+ {restCount} more</span>
-          </div>
-        )}
-      </div>
-*/
-
       <p className="text-xs text-neutral-500">
         Hover a card to lift it into view · swipe to browse the rest on mobile
       </p>

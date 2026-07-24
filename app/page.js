@@ -44,8 +44,9 @@ export default function Home() {
           >
             <span className="text-sm font-medium text-black">{card.word}</span>
           </div>
-        ))}
-
+        ))}     
+      </div>
+     
       <p className="text-xs text-neutral-500">
         Hover a card to lift it into view · swipe to browse the rest on mobile
       </p>

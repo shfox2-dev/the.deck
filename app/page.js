@@ -27,7 +27,7 @@ export default function Home() {
             style={{ marginLeft: i === 0 ? 0 : -54, zIndex: DECK.length - i }}
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-amber-50
                        flex flex-col items-center justify-center gap-2 text-center
-                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-50"
+                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.length + 1"
           >
             <span className="text-xl" aria-hidden="true">{e.icon}</span>
             <span className="text-sm font-medium text-amber-800">{e.label}</span>
@@ -40,12 +40,13 @@ export default function Home() {
             style={{ marginLeft: -54, zIndex: DECK.length - 3 - i }}
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-white
                        flex items-center justify-center text-center px-2
-                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-50"
+                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.length + 1"
           >
             <span className="text-sm font-medium text-black">{card.word}</span>
           </div>
         ))}
 
+/*
         {restCount > 0 && (
           <div
             style={{ marginLeft: -54, zIndex: 20 }}
@@ -56,6 +57,7 @@ export default function Home() {
           </div>
         )}
       </div>
+*/
 
       <p className="text-xs text-neutral-500">
         Hover a card to lift it into view · swipe to browse the rest on mobile

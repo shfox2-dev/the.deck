@@ -34,10 +34,10 @@ export default function Home() {
           </Link>
         ))}
 
-        {DECK.slice(0, 3).map((card, i) => (
+        {DECK.slice(0, DECK.idex).map((card, i) => (
           <div
             key={card.id}
-            style={{ marginLeft: -54, zIndex: DECK.length - 3 - i }}
+            style={{ marginLeft: -432 / DECK.index, zIndex: DECK.length - 3 - i }}
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-white
                        flex items-center justify-center text-center px-2
                        transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.index + 1"

@@ -24,7 +24,7 @@ export default function Home() {
           <Link
             key={e.href}
             href={e.href}
-            style={{ marginLeft: i === 0 ? 0 : -54, zIndex: 10 + i }}
+            style={{ marginLeft: i === 0 ? 0 : -54, zIndex: DECK.length - i }}
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-amber-50
                        flex flex-col items-center justify-center gap-2 text-center
                        transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-50"
@@ -37,7 +37,7 @@ export default function Home() {
         {DECK.slice(0, 3).map((card, i) => (
           <div
             key={card.id}
-            style={{ marginLeft: -54, zIndex: 13 + i }}
+            style={{ marginLeft: -54, zIndex: DECK.length - 3 - i }}
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-white
                        flex items-center justify-center text-center px-2
                        transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-50"

@@ -11,7 +11,8 @@ const ENTRANCES = [
 
 export default function Home() {
   const restCount = Math.max(DECK.length - 3, 0);
-
+  const [hovered, setHovered] = useState<number | null>(null);
+  
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-16">
       <div className="text-center">
@@ -28,6 +29,11 @@ export default function Home() {
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-amber-50
                        flex flex-col items-center justify-center gap-2 text-center
                        transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.length + 1"
+            <div
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              style={{  zIndex: hovered === i ? 999 : baseZIndex,  }}
+            >
           >
             <span className="text-xl" aria-hidden="true">{e.icon}</span>
             <span className="text-sm font-medium text-amber-800">{e.label}</span>
@@ -41,10 +47,16 @@ export default function Home() {
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-white
                        flex items-center justify-center text-center px-2
                        transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.length + 1"
+            <div
+            onMouseEnter={() => setHovered(i)}
+            onMouseLeave={() => setHovered(null)}
+            style={{  zIndex: hovered === i ? 999 : baseZIndex,  }}
+            >
           >
             <span className="text-sm font-medium text-black">{card.word}</span>
           </div>
         ))}     
+          
       </div>
      
       <p className="text-xs text-neutral-500">

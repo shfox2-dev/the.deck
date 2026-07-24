@@ -27,20 +27,20 @@ export default function Home() {
             style={{ marginLeft: i === 0 ? 0 : -54, zIndex: DECK.length - i  }}
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-amber-50
                        flex flex-col items-center justify-center gap-2 text-center
-                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.index + 1"     
+                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.length + 1"     
           >
             <span className="text-xl" aria-hidden="true">{e.icon}</span>
             <span className="text-sm font-medium text-amber-800">{e.label}</span>
           </Link>
         ))}
 
-        {DECK.slice(0, DECK.idex).map((card, i) => (
+        {DECK.slice(0, DECK.length).map((card, i) => (
           <div
             key={card.id}
-            style={{ marginLeft: -432 / DECK.index, zIndex: DECK.length - 3 - i }}
+            style={{ marginLeft: -432 / DECK.length, zIndex: DECK.length - 3 - i }}
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-white
                        flex items-center justify-center text-center px-2
-                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.index + 1"
+                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.length + 1"
           >
             <span className="text-sm font-medium text-black">{card.word}</span>
           </div>

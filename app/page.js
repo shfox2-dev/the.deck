@@ -12,7 +12,7 @@ const ENTRANCES = [
 export default function Home() {
   
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-20">
+    <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-16">
       <div className="text-center">
         <p className="text-sm text-neutral-500">{CURRENT_GROUP}</p>
         <h1 className="text-2xl font-medium mt-1">Your deck</h1>
@@ -36,7 +36,7 @@ export default function Home() {
         {DECK.slice(0, DECK.length).map((card, i) => (
           <div
             key={card.id}
-            style={{ marginLeft: -162 / DECK.length, zIndex: DECK.length - i }}
+            style={{ marginLeft: -108 / DECK.length, zIndex: DECK.length - i }}
             className="relative w-40 h-52 rounded-xl border border-neutral-300 bg-white
                        flex items-center justify-center text-center px-2
                        transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-[999]"

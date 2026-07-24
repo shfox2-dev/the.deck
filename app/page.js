@@ -12,7 +12,7 @@ const ENTRANCES = [
 export default function Home() {
   
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-16">
+    <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-20">
       <div className="text-center">
         <p className="text-sm text-neutral-500">{CURRENT_GROUP}</p>
         <h1 className="text-2xl font-medium mt-1">Your deck</h1>

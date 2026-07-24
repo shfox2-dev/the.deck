@@ -33,7 +33,7 @@ export default function Home() {
           </Link>
         ))}
 
-        {DECK.slice(0, DECK.length).map((card, i) => (
+        {DECK.slice(0, 3).map((card, i) => (
           <div
             key={card.id}
             style={{ marginLeft: -54, zIndex: DECK.length - 3 - i }}

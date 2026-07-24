@@ -14,7 +14,7 @@ export default function Home() {
   const [hoveredKey, setHoveredKey] = useState(null);
   
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-24">
+    <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-16">
       <div className="text-center">
         <p className="text-sm text-neutral-500">{CURRENT_GROUP}</p>
         <h1 className="text-2xl font-medium mt-1">Your deck</h1>
@@ -25,7 +25,7 @@ export default function Home() {
           <Link
             key={e.href}
             href={e.href}
-            style={{ marginLeft: i === 0 ? 0 : -54, onMouseEnter:zIndez: DECK.length + 1, onMouseLeave:zIndex: DECK.length + 3 - i  }}
+            style={{ marginLeft: i === 0 ? 0 : -54, onMouseEnter:z-DECK.length + 1, onMouseLeave:z-DECK.length + 3 - i  }}
             className="relative w-36 h-52 rounded-xl border border-neutral-300 bg-amber-50
                        flex flex-col items-center justify-center gap-2 text-center
                        transition-transform duration-200 ease-out hover:-translate-y-6"     
@@ -38,7 +38,7 @@ export default function Home() {
         {DECK.slice(0, DECK.length).map((card, i) => (
           <div
             key={card.id}
-            style={{ marginLeft: -108 / DECK.length, onMouseEnter:zIndez: DECK.length + 1, onMouseLeave:zIndex: DECK.length + 3 - i }}
+            style={{ marginLeft: -108 / DECK.length, onMouseEnter:z-DECK.length + 1, onMouseLeave:z-DECK.length + 3 - i }}
             className="relative w-36 h-52 rounded-xl border border-neutral-300 bg-white
                        flex items-center justify-center text-center px-2
                        transition-transform duration-200 ease-out hover:-translate-y-6"

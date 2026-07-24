@@ -42,7 +42,7 @@ export default function Home() {
                        flex items-center justify-center text-center px-2
                        transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-50"
           >
-            <span className="text-sm font-medium">{card.word}</span>
+            <span className="text-sm font-medium text-black">{card.word}</span>
           </div>
         ))}
 

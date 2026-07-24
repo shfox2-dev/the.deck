@@ -10,7 +10,6 @@ const ENTRANCES = [
 ];
 
 export default function Home() {
-  const restCount = Math.max(DECK.length - 3, 0);
   
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-16">
@@ -34,7 +33,7 @@ export default function Home() {
           </Link>
         ))}
 
-        {DECK.slice(0, DECK.length).map((card, i) => (
+        {DECK.slice(0, 3).map((card, i) => (
           <div
             key={card.id}
             style={{ marginLeft: -432 / DECK.length, zIndex: DECK.length - 3 - i }}

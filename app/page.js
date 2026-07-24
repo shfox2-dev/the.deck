@@ -28,10 +28,10 @@ export default function Home() {
             href={e.href}
             onMouseEnter={() => setHovered(i)}
             onMouseLeave={() => setHovered(null)}
-            style={{ marginLeft: i === 0 ? 0 : -54, zIndex: DECK.length - i, zIndex: hovered === i ? 999 : baseZIndex, }}
+            style={{ marginLeft: i === 0 ? 0 : -54, zIndex: DECK.length - i, zIndex: hovered === i ? 999 : baseZIndex }}
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-amber-50
                        flex flex-col items-center justify-center gap-2 text-center
-                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.length + 1"     
+                       transition-transform duration-200 ease-out hover:-translate-y-6"     
           >
             <span className="text-xl" aria-hidden="true">{e.icon}</span>
             <span className="text-sm font-medium text-amber-800">{e.label}</span>
@@ -43,10 +43,10 @@ export default function Home() {
             key={card.id}
             onMouseEnter={() => setHovered(i)}
             onMouseLeave={() => setHovered(null)}
-            style={{ marginLeft: -54, zIndex: DECK.length - 3 - i, zIndex: hovered === i ? 999 : baseZIndex, }}
+            style={{ marginLeft: -54, zIndex: DECK.length - 3 - i, zIndex: hovered === i ? 999 : baseZIndex }}
             className="relative w-24 h-36 rounded-xl border border-neutral-300 bg-white
                        flex items-center justify-center text-center px-2
-                       transition-transform duration-200 ease-out hover:-translate-y-6 hover:z-DECK.length + 1"
+                       transition-transform duration-200 ease-out hover:-translate-y-6"
           >
             <span className="text-sm font-medium text-black">{card.word}</span>
           </div>

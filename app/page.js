@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { DECK, CURRENT_GROUP } from "@/lib/mockData";
 
@@ -12,7 +11,6 @@ const ENTRANCES = [
 
 export default function Home() {
   const restCount = Math.max(DECK.length - 3, 0);
-  const [hovered, setHovered] = useState<number | null>(null);
   
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-16">

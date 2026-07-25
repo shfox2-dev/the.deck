@@ -1,26 +1,37 @@
 @import "tailwindcss";
 
+/* Design tokens for the whole site. Add utility classes like bg-bg,
+   text-ink, bg-gold, etc. by referencing these names -- see below. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #F4F7FB;        /* page background */
+  --color-surface: #FFFFFF;   /* card / panel background */
+  --color-border: #DCE3ED;    /* borders, dividers */
+  --color-ink: #1F2937;       /* primary text -- dark enough to read on white */
+  --color-muted: #64748B;     /* secondary text, labels */
+  --color-brand-blue: #3B82F6;  /* primary actions, links */
+  --color-brand-green: #10B981; /* success / correct */
+  --color-brand-red: #EF4444;   /* error / incorrect */
+  --color-gold: #F6C945;        /* reserved: debut cards, top of leaderboard, streaks */
+  --color-gold-dark: #D4A017;   /* gold border / accent */
+  --color-gold-ink: #4A2F00;    /* text on gold backgrounds */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-ink: var(--color-ink);
+  --color-muted: var(--color-muted);
+  --color-brand-blue: var(--color-brand-blue);
+  --color-brand-green: var(--color-brand-green);
+  --color-brand-red: var(--color-brand-red);
+  --color-gold: var(--color-gold);
+  --color-gold-dark: var(--color-gold-dark);
+  --color-gold-ink: var(--color-gold-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-bg);
+  color: var(--color-ink);
   font-family: Arial, Helvetica, sans-serif;
 }

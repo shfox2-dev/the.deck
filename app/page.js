@@ -66,8 +66,6 @@ export default function Home() {
       )}
 
       <div className="text-center">
-        <p className="text-sm text-muted">{deck.name}</p>
-        <h1 className="text-2xl font-medium mt-1 text-ink">Your deck</h1>
       </div>
 
       {/* overflow-x-auto is the safety net: if the row is ever wider than the

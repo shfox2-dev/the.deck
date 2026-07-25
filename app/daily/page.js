@@ -2,68 +2,99 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { getDecks, isDebutToday } from "@/lib/decks";
-import { MOCK_LEADERBOARD } from "@/lib/mockLeaderboard";
+import { getDecks } from "@/lib/decks";
 
-// Same card for every student in the group: pick deterministically by day.
-function dailyCard(cards) {
-  const dayNum = Math.floor(Date.now() / 86400000);
-  return cards[dayNum % cards.length];
+const ROUNDS = 5;
+
+function shuffledDeck(cards) {
+  return [...cards].sort(() => Math.random() - 0.5).slice(0, Math.min(ROUNDS, cards.length));
 }
 
-export default function Daily() {
+export default function Duel() {
   // TODO: once accounts/rosters exist, use the student's actual assigned
   // group instead of always the first deck.
   const [cards] = useState(() => getDecks()[0].cards);
-  const [card] = useState(() => dailyCard(cards));
+  const [stage, setStage] = useState("intro"); // intro | playing | roundEnd | done
+  const [questions] = useState(() => shuffledDeck(cards));
+  const [round, setRound] = useState(0);
   const [guess, setGuess] = useState("");
-  const [startedAt] = useState(() => Date.now());
-  const [result, setResult] = useState(null); // null | "correct" | "wrong"
-  const [elapsed, setElapsed] = useState(0);
-  const inputRef = useRef(null);
+  const [youScore, setYouScore] = useState(0);
+  const [botScore, setBotScore] = useState(0);
+  const [roundWinner, setRoundWinner] = useState(null);
+  const botTimer = useRef(null);
+
+  const card = questions[round];
+
+  function startDuel() {
+    setStage("playing");
+  }
 
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    if (stage !== "playing") return;
+    // Bot "thinks" for a random 1.5-4s, standing in for a real opponent
+    // until live matchmaking is wired up.
+    const delay = 1500 + Math.random() * 2500;
+    botTimer.current = setTimeout(() => {
+      setBotScore((s) => s + 1);
+      setRoundWinner("bot");
+      setStage("roundEnd");
+    }, delay);
+    return () => clearTimeout(botTimer.current);
+  }, [round, stage]);
 
-  function submit(e) {
+  function submitGuess(e) {
     e.preventDefault();
-    if (result === "correct") return;
+    if (stage !== "playing") return;
     const correct = guess.trim().toLowerCase() === card.word.toLowerCase();
     if (correct) {
-      setElapsed(((Date.now() - startedAt) / 1000).toFixed(1));
-      setResult("correct");
-    } else {
-      setResult("wrong");
+      clearTimeout(botTimer.current);
+      setYouScore((s) => s + 1);
+      setRoundWinner("you");
+      setStage("roundEnd");
     }
   }
 
-  const isDebut = isDebutToday(card);
+  function nextRound() {
+    setGuess("");
+    setRoundWinner(null);
+    if (round + 1 >= questions.length) {
+      setStage("done");
+    } else {
+      setRound((r) => r + 1);
+      setStage("playing");
+    }
+  }
 
-  if (result === "correct") {
-    const board = [...MOCK_LEADERBOARD.dailySpeed, { name: "You", value: Number(elapsed) }]
-      .sort((a, b) => a.value - b.value);
-
+  if (stage === "intro") {
     return (
       <main className="min-h-screen bg-bg flex flex-col items-center justify-center gap-6 px-6 text-center">
-        <p className="text-sm text-muted">Solved in</p>
-        <h1 className="text-3xl font-medium text-ink">{elapsed}s</h1>
-        <div className="w-full max-w-xs text-left">
-          <p className="text-xs text-muted mb-2">Today's speed board</p>
-          <ol className="text-sm space-y-1">
-            {board.map((r, i) => (
-              <li
-                key={r.name}
-                className={`flex justify-between ${r.name === "You" ? "font-medium" : ""} ${
-                  i === 0 ? "text-gold-ink font-medium" : "text-ink"
-                }`}
-              >
-                <span>{i + 1}. {r.name}</span>
-                <span>{r.value}s</span>
-              </li>
-            ))}
-          </ol>
-        </div>
+        <p className="text-sm text-muted">Live duel</p>
+        <h1 className="text-2xl font-medium text-ink">Demo opponent: Bot</h1>
+        <p className="text-sm text-muted max-w-xs">
+          Real duels will match you with another student who is online right now.
+          For now, race against a bot to try out the mode.
+        </p>
+        <button
+          onClick={startDuel}
+          className="px-5 py-2 rounded-lg bg-brand-blue text-white text-sm"
+        >
+          Start duel
+        </button>
+      </main>
+    );
+  }
+
+  if (stage === "done") {
+    const youWon = youScore > botScore;
+    return (
+      <main className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4 px-6 text-center">
+        <p className="text-sm text-muted">Final score</p>
+        <h1 className="text-3xl font-medium text-ink">
+          You {youScore} – {botScore} Bot
+        </h1>
+        <p className={`text-lg ${youWon ? "text-gold-ink font-medium" : "text-ink"}`}>
+          {youWon ? "You won" : "Bot won this time"}
+        </p>
         <Link href="/" className="text-sm underline text-muted mt-4">Back to deck</Link>
       </main>
     );
@@ -71,38 +102,46 @@ export default function Daily() {
 
   return (
     <main className="min-h-screen bg-bg flex flex-col items-center justify-center gap-6 px-6 text-center">
-      {isDebut && (
-        <p className="text-xs font-medium text-gold-ink bg-gold/30 px-3 py-1 rounded-full">
-          New word debut
-        </p>
-      )}
-      <p className="text-sm text-muted">Today's puzzle · type the word</p>
+      <p className="text-sm text-muted">
+        Round {round + 1} of {questions.length} · You {youScore} – {botScore} Bot
+      </p>
 
-      <div
-        className={`w-72 rounded-2xl border px-6 py-8 text-center
-          ${isDebut ? "border-gold-dark bg-gold/20" : "border-border bg-surface"}`}
-      >
+      <div className="w-72 rounded-2xl border border-border bg-surface px-6 py-8">
         <p className="text-base text-ink">{card.definition}</p>
       </div>
 
-      <form onSubmit={submit} className="flex flex-col items-center gap-3 w-72">
-        <input
-          ref={inputRef}
-          value={guess}
-          onChange={(e) => setGuess(e.target.value)}
-          placeholder="Your answer"
-          className="w-full border border-border bg-surface rounded-lg px-3 py-2 text-center text-ink"
-        />
-        <button
-          type="submit"
-          className="px-5 py-2 rounded-lg bg-brand-blue text-white text-sm"
-        >
-          Submit
-        </button>
-        {result === "wrong" && (
-          <p className="text-sm text-brand-red">Not quite — try again</p>
-        )}
-      </form>
+      {stage === "playing" && (
+        <form onSubmit={submitGuess} className="flex flex-col items-center gap-3 w-72">
+          <input
+            autoFocus
+            value={guess}
+            onChange={(e) => setGuess(e.target.value)}
+            placeholder="Type the word fast"
+            className="w-full border border-border bg-surface rounded-lg px-3 py-2 text-center text-ink"
+          />
+          <button
+            type="submit"
+            className="px-5 py-2 rounded-lg bg-brand-blue text-white text-sm"
+          >
+            Submit
+          </button>
+        </form>
+      )}
+
+      {stage === "roundEnd" && (
+        <div className="flex flex-col items-center gap-3">
+          <p className="text-sm text-ink">
+            {roundWinner === "you" ? "You got it first" : "Bot got it first"} —{" "}
+            <span className="font-medium">{card.word}</span>
+          </p>
+          <button
+            onClick={nextRound}
+            className="px-5 py-2 rounded-lg border border-border bg-surface text-sm text-ink"
+          >
+            Next round
+          </button>
+        </div>
+      )}
     </main>
   );
 }

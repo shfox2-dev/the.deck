@@ -85,7 +85,7 @@ export default function Home() {
                 marginLeft: i === 0 ? 0 : -ENTRANCE_OVERLAP_PX,
                 zIndex: hoveredKey === e.href ? 999 : deck.cards.length + 3 - i,
               }}
-              className="relative w-40 h-56 rounded-xl border border-brand-blue/30 bg-brand-blue/10
+              className="relative w-40 h-56 rounded-xl border border-brand-blue bg-brand-blue
                          flex flex-col items-center justify-center gap-2 text-center shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
@@ -112,9 +112,6 @@ export default function Home() {
         </div>
       </div>
 
-      <p className="text-xs text-muted">
-        Hover a card to lift it into view · scroll or swipe to browse the rest
-      </p>
     </main>
   );
 }

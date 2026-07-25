@@ -90,7 +90,7 @@ export default function Home() {
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
               <span className="text-xl" aria-hidden="true">{e.icon}</span>
-              <span className="text-sm font-medium text-brand-blue">{e.label}</span>
+              <span className="text-sm font-medium text-ink">{e.label}</span>
             </Link>
           ))}
           {deck.cards.map((card, i) => (

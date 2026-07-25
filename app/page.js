@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { DECK, CURRENT_GROUP } from "@/lib/mockData";
+import { getDecks } from "@/lib/decks";
 
 const ENTRANCES = [
   { href: "/daily", label: "Daily puzzle", icon: "⚡" },
@@ -15,17 +15,59 @@ const ENTRANCES = [
 const CARD_WIDTH = 160; // px, matches className="w-40"
 const OVERLAP_RATIO = 0.7; // 0 = no overlap, closer to 1 = mostly hidden
 const OVERLAP_PX = CARD_WIDTH * OVERLAP_RATIO;
+// Entrance cards use a fixed overlap instead, so they always visibly stick
+// out from the deck regardless of how OVERLAP_PX is tuned.
+const ENTRANCE_OVERLAP_PX = 64;
 
 export default function Home() {
   // Track which card is hovered so we can force its z-index above everything
   // else via inline style -- a hover: class can't win against inline zIndex.
   const [hoveredKey, setHoveredKey] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  // TODO: once accounts/rosters exist, this should be the student's actual
+  // assigned group instead of always the first deck.
+  const [deck] = useState(() => getDecks()[0]);
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-20">
+    <main className="min-h-screen bg-bg flex flex-col items-center justify-center gap-10 px-6 py-20 relative">
+      <button
+        aria-label="Open menu"
+        onClick={() => setMenuOpen(true)}
+        className="absolute top-6 left-6 w-10 h-10 rounded-lg border border-border bg-surface
+                   flex flex-col items-center justify-center gap-1"
+      >
+        <span className="block w-5 h-0.5 bg-ink" />
+        <span className="block w-5 h-0.5 bg-ink" />
+        <span className="block w-5 h-0.5 bg-ink" />
+      </button>
+
+      {menuOpen && (
+        <div className="fixed inset-0 z-[1000] flex">
+          <div
+            className="fixed inset-0 bg-ink/40"
+            onClick={() => setMenuOpen(false)}
+          />
+          <nav className="relative w-64 h-full bg-surface border-r border-border p-6 flex flex-col gap-4">
+            <button
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+              className="self-end text-muted text-sm"
+            >
+              Close
+            </button>
+            <Link href="/" className="text-ink text-sm font-medium" onClick={() => setMenuOpen(false)}>
+              Home
+            </Link>
+            <Link href="/admin" className="text-ink text-sm font-medium" onClick={() => setMenuOpen(false)}>
+              Manage decks
+            </Link>
+          </nav>
+        </div>
+      )}
+
       <div className="text-center">
-        <p className="text-sm text-neutral-500">{CURRENT_GROUP}</p>
-        <h1 className="text-2xl font-medium mt-1">Your deck</h1>
+        <p className="text-sm text-muted">{deck.name}</p>
+        <h1 className="text-2xl font-medium mt-1 text-ink">Your deck</h1>
       </div>
 
       {/* overflow-x-auto is the safety net: if the row is ever wider than the
@@ -40,37 +82,37 @@ export default function Home() {
               onMouseEnter={() => setHoveredKey(e.href)}
               onMouseLeave={() => setHoveredKey(null)}
               style={{
-                marginLeft: i === 0 ? 0 : -64,
-                zIndex: hoveredKey === e.href ? 999 : DECK.length + 3 - i,
+                marginLeft: i === 0 ? 0 : -ENTRANCE_OVERLAP_PX,
+                zIndex: hoveredKey === e.href ? 999 : deck.cards.length + 3 - i,
               }}
-              className="relative w-40 h-56 rounded-xl border border-neutral-300 bg-amber-50
+              className="relative w-40 h-56 rounded-xl border border-brand-blue/30 bg-brand-blue/10
                          flex flex-col items-center justify-center gap-2 text-center shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
               <span className="text-xl" aria-hidden="true">{e.icon}</span>
-              <span className="text-sm font-medium text-amber-800">{e.label}</span>
+              <span className="text-sm font-medium text-brand-blue">{e.label}</span>
             </Link>
           ))}
-          {DECK.map((card, i) => (
+          {deck.cards.map((card, i) => (
             <div
               key={card.id}
               onMouseEnter={() => setHoveredKey(card.id)}
               onMouseLeave={() => setHoveredKey(null)}
               style={{
                 marginLeft: -OVERLAP_PX,
-                zIndex: hoveredKey === card.id ? 999 : DECK.length - i,
+                zIndex: hoveredKey === card.id ? 999 : deck.cards.length - i,
               }}
-              className="relative w-40 h-56 rounded-xl border border-neutral-300 bg-white
+              className="relative w-40 h-56 rounded-xl border border-border bg-surface
                          flex items-center justify-center text-center px-2 shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
-              <span className="text-sm font-medium text-black">{card.word}</span>
+              <span className="text-sm font-medium text-ink">{card.word}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <p className="text-xs text-neutral-500">
+      <p className="text-xs text-muted">
         Hover a card to lift it into view · scroll or swipe to browse the rest
       </p>
     </main>

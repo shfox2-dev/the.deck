@@ -40,7 +40,7 @@ export default function Home() {
               onMouseEnter={() => setHoveredKey(e.href)}
               onMouseLeave={() => setHoveredKey(null)}
               style={{
-                marginLeft: i === 0 ? 0 : -OVERLAP_PX,
+                marginLeft: i === 0 ? 0 : -54,
                 zIndex: hoveredKey === e.href ? 999 : DECK.length + 3 - i,
               }}
               className="relative w-40 h-56 rounded-xl border border-neutral-300 bg-amber-50

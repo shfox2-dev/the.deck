@@ -4,7 +4,7 @@ import Link from "next/link";
 import { DECK, CURRENT_GROUP } from "@/lib/mockData";
 
 const ENTRANCES = [
-  { href: "/daily", label: "Daily puzzle", icon: app/favicon.ico },
+  { href: "/daily", label: "Daily puzzle", icon: "⚡" },
   { href: "/practice", label: "Practice", icon: "🂡" },
   { href: "/duel", label: "Duel", icon: "⚔" },
 ];

@@ -17,7 +17,7 @@
 }
 
 @theme inline {
-  --color-bg: var(--color-bg);
+  --color-bg: var(--color-ink);
   --color-surface: var(--color-surface);
   --color-border: var(--color-border);
   --color-ink: var(--color-ink);

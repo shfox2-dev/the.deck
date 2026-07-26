@@ -45,11 +45,45 @@ export default function Daily() {
       .sort((a, b) => a.value - b.value);
 
     return (
-      <main className="min-h-screen bg-bg flex flex-col items-center justify-center gap-6 px-6 text-center">
-        <p className="text-sm text-muted">Solved in</p>
-        <h1 className="text-3xl font-medium text-ink">{elapsed}s</h1>
+      <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
+      <button
+        aria-label="Open menu"
+        onClick={() => setMenuOpen(true)}
+        className="absolute top-6 left-6 w-10 h-10 rounded-lg border border-green-light bg-green-light
+                   flex flex-col items-center justify-center gap-1"
+      >
+        <span className="block w-5 h-0.5 bg-green-dark" />
+        <span className="block w-5 h-0.5 bg-green-dark" />
+        <span className="block w-5 h-0.5 bg-green-dark" />
+      </button>
+
+      {menuOpen && (
+        <div className="fixed inset-0 z-[1000] flex">
+          <div
+            className="fixed inset-0 bg-green-light/0"
+            onClick={() => setMenuOpen(false)}
+          />
+          <nav className="relative w-44 h-full bg-green-light border-r border-green-light p-6 flex flex-col gap-4">
+            <button
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+              className="self-end text-green-dark text-sm"
+            >
+              Close
+            </button>
+            <Link href="/" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
+              The Deck
+            </Link>
+            <Link href="/admin" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
+              Manage decks
+            </Link>
+          </nav>
+        </div>
+      )}
+        <p className="text-sm text-green-light">Solved in</p>
+        <h1 className="text-3xl font-medium text-green-light">{elapsed}s</h1>
         <div className="w-full max-w-xs text-left">
-          <p className="text-xs text-muted mb-2">Today's speed board</p>
+          <p className="text-xs text-green-light mb-2">Today's speed board</p>
           <ol className="text-sm space-y-1">
             {board.map((r, i) => (
               <li
@@ -64,7 +98,6 @@ export default function Daily() {
             ))}
           </ol>
         </div>
-        <Link href="/" className="text-sm underline text-muted mt-4">Back to deck</Link>
       </main>
     );
   }
@@ -73,16 +106,16 @@ export default function Daily() {
     <main className="min-h-screen bg-bg flex flex-col items-center justify-center gap-6 px-6 text-center">
       {isDebut && (
         <p className="text-xs font-medium text-gold-ink bg-gold/30 px-3 py-1 rounded-full">
-          New word debut
+          New Card
         </p>
       )}
-      <p className="text-sm text-muted">Today's puzzle · type the word</p>
+      <p className="text-sm text-green-light">Today's puzzle · type the word</p>
 
       <div
         className={`w-72 rounded-2xl border px-6 py-8 text-center
-          ${isDebut ? "border-gold-dark bg-gold/20" : "border-border bg-surface"}`}
+          ${isDebut ? "border-gold-light bg-gold-med" : "border-blue bg-off-white"}`}
       >
-        <p className="text-base text-ink">{card.definition}</p>
+        <p className="text-gold-dark text-blue">{card.definition}</p>
       </div>
 
       <form onSubmit={submit} className="flex flex-col items-center gap-3 w-72">
@@ -91,7 +124,7 @@ export default function Daily() {
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
           placeholder="Your answer"
-          className="w-full border border-border bg-surface rounded-lg px-3 py-2 text-center text-ink"
+          className="w-full border border-blue bg-off-white rounded-lg px-3 py-2 text-center text-blue"
         />
         <button
           type="submit"

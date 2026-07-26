@@ -13,11 +13,11 @@ const ENTRANCES = [
 // the w-* class below), OVERLAP_RATIO controls how much of each card peeks
 // out. Higher ratio = more overlap = more cards fit on screen at once.
 const CARD_WIDTH = 240; // px, matches className="w-40"
-const OVERLAP_RATIO = 0.9; // 0 = no overlap, closer to 1 = mostly hidden
-const OVERLAP_PX = CARD_WIDTH * OVERLAP_RATIO;
+const OVERLAP_RATIO = deck.cards.length * CARD_WIDTH; // 0 = no overlap, closer to 1 = mostly hidden
+const OVERLAP_PX = CARD_WIDRH - 48 * CARD_WIDTH / OVERLAP_RATIO;
 // Entrance cards use a fixed overlap instead, so they always visibly stick
 // out from the deck regardless of how OVERLAP_PX is tuned.
-const ENTRANCE_OVERLAP_PX = 96;
+const ENTRANCE_OVERLAP_PX = 124;
 
 export default function Home() {
   // Track which card is hovered so we can force its z-index above everything
@@ -29,16 +29,16 @@ export default function Home() {
   const [deck] = useState(() => getDecks()[0]);
 
   return (
-    <main className="min-h-screen bg-gold-dark flex flex-col items-center justify-center gap-10 px-6 py-20 relative">
+    <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-20 relative">
       <button
         aria-label="Open menu"
         onClick={() => setMenuOpen(true)}
-        className="absolute top-6 left-6 w-10 h-10 rounded-lg border border-gold bg-gold
+        className="absolute top-6 left-6 w-10 h-10 rounded-lg border border-green-light bg-green-light
                    flex flex-col items-center justify-center gap-1"
       >
-        <span className="block w-5 h-0.5 bg-gold-med" />
-        <span className="block w-5 h-0.5 bg-gold-med" />
-        <span className="block w-5 h-0.5 bg-gold-med" />
+        <span className="block w-5 h-0.5 bg-green-dark" />
+        <span className="block w-5 h-0.5 bg-green-dark" />
+        <span className="block w-5 h-0.5 bg-green-dark" />
       </button>
 
       {menuOpen && (
@@ -47,18 +47,18 @@ export default function Home() {
             className="fixed inset-0 bg-green-light/0"
             onClick={() => setMenuOpen(false)}
           />
-          <nav className="relative w-64 h-full bg-gold border-r border-gold-med p-6 flex flex-col gap-4">
+          <nav className="relative w-44 h-full bg-green-light border-r border-green-light p-6 flex flex-col gap-4">
             <button
               aria-label="Close menu"
               onClick={() => setMenuOpen(false)}
-              className="self-end text-gold-med text-sm"
+              className="self-end text-green-dark text-sm"
             >
               Close
             </button>
-            <Link href="/" className="text-gold-med text-sm font-medium" onClick={() => setMenuOpen(false)}>
+            <Link href="/" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
               Home
             </Link>
-            <Link href="/admin" className="text-gold-med text-sm font-medium" onClick={() => setMenuOpen(false)}>
+            <Link href="/admin" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
               Manage decks
             </Link>
           </nav>
@@ -83,12 +83,12 @@ export default function Home() {
                 marginLeft: i === 0 ? 0 : -ENTRANCE_OVERLAP_PX,
                 zIndex: hoveredKey === e.href ? 999 : deck.cards.length + 3 - i,
               }}
-              className="relative w-60 h-96 rounded-xl border border-blue bg-blue-light
+              className="relative w-60 h-96 rounded-xl border border-red bg-off-white
                          flex flex-col items-center justify-center gap-2 text-center shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
               <span className="text-xl" aria-hidden="true">{e.icon}</span>
-              <span className="text-xl font-medium text-blue-dark">{e.label}</span>
+              <span className="text-2xl font-medium text-red">{e.label}</span>
             </Link>
           ))}
           {deck.cards.map((card, i) => (
@@ -100,11 +100,11 @@ export default function Home() {
                 marginLeft: -OVERLAP_PX,
                 zIndex: hoveredKey === card.id ? 999 : deck.cards.length - i,
               }}
-              className="relative w-60 h-96 rounded-xl border border-blue-light bg-blue
+              className="relative w-60 h-96 rounded-xl border border-blue bg-off-white
                          flex items-center justify-center text-center px-2 shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
-              <span className="text-xl font-medium text-blue-light">{card.word}</span>
+              <span className="text-2xl font-medium text-blue">{card.word}</span>
             </div>
           ))}
         </div>

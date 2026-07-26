@@ -9,17 +9,6 @@ const ENTRANCES = [
   { href: "/duel", label: "Duel", icon: "⚔" },
 ];
 
-// Tune these two together: CARD_WIDTH is the true rendered width (must match
-// the w-* class below), OVERLAP_RATIO controls how much of each card peeks
-// out. Higher ratio = more overlap = more cards fit on screen at once.
-const DECK_LENGTH = deck.cards.length
-const CARD_WIDTH = 240; // px, matches className="w-40"
-const OVERLAP_RATIO = DECK_LENGTH * CARD_WIDTH; // 0 = no overlap, closer to 1 = mostly hidden
-const OVERLAP_PX = CARD_WIDTH - 48 * CARD_WIDTH / OVERLAP_RATIO;
-// Entrance cards use a fixed overlap instead, so they always visibly stick
-// out from the deck regardless of how OVERLAP_PX is tuned.
-const ENTRANCE_OVERLAP_PX = 124;
-
 export default function Home() {
   // Track which card is hovered so we can force its z-index above everything
   // else via inline style -- a hover: class can't win against inline zIndex.
@@ -28,6 +17,11 @@ export default function Home() {
   // TODO: once accounts/rosters exist, this should be the student's actual
   // assigned group instead of always the first deck.
   const [deck] = useState(() => getDecks()[0]);
+  
+  const CARD_WIDTH = 240;
+  const DECK_SPACE = deck.cards.length * CARD_WIDTH;
+  const OVERLAP_PX = CARD_WIDTH - 48 * CARD_WIDTH / DECK_SPACE;
+  const ENTRANCE_OVERLAP_PX = 124;
 
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-20 relative">

@@ -83,7 +83,7 @@ export default function Home() {
                 marginLeft: i === 0 ? 0 : -ENTRANCE_OVERLAP_PX,
                 zIndex: hoveredKey === e.href ? 999 : deck.cards.length + 3 - i,
               }}
-              className="relative w-60 h-96 rounded-xl border border-blue-dark bg-blue-light
+              className="relative w-60 h-96 rounded-xl border border-blue bg-blue-light
                          flex flex-col items-center justify-center gap-2 text-center shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
@@ -100,7 +100,7 @@ export default function Home() {
                 marginLeft: -OVERLAP_PX,
                 zIndex: hoveredKey === card.id ? 999 : deck.cards.length - i,
               }}
-              className="relative w-60 h-96 rounded-xl border border-blue-light bg-blue-dark
+              className="relative w-60 h-96 rounded-xl border border-blue-light bg-blue
                          flex items-center justify-center text-center px-2 shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >

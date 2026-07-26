@@ -17,7 +17,7 @@ const OVERLAP_RATIO = 0.9; // 0 = no overlap, closer to 1 = mostly hidden
 const OVERLAP_PX = CARD_WIDTH * OVERLAP_RATIO;
 // Entrance cards use a fixed overlap instead, so they always visibly stick
 // out from the deck regardless of how OVERLAP_PX is tuned.
-const ENTRANCE_OVERLAP_PX = 64;
+const ENTRANCE_OVERLAP_PX = 12;
 
 export default function Home() {
   // Track which card is hovered so we can force its z-index above everything

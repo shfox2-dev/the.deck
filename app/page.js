@@ -20,7 +20,7 @@ export default function Home() {
   
   const CARD_WIDTH = 240;
   const DECK_SPACE = deck.cards.length * CARD_WIDTH;
-  const OVERLAP_PX = CARD_WIDTH - 124 * CARD_WIDTH / DECK_SPACE;
+  const OVERLAP_PX = CARD_WIDTH - 156 * CARD_WIDTH / DECK_SPACE;
   const ENTRANCE_OVERLAP_PX = 200;
 
   return (
@@ -51,7 +51,7 @@ export default function Home() {
               Close
             </button>
             <Link href="/" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
-              Home
+              The Deck
             </Link>
             <Link href="/admin" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
               Manage decks

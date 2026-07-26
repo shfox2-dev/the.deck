@@ -77,7 +77,7 @@ export default function Home() {
               style={{
                 marginLeft: i === 0 ? 0 : -ENTRANCE_OVERLAP_PX,
                 zIndex: hoveredKey === e.href ? 999 : deck.cards.length + 3 - i,
-                rotate: 0.5 * i - deck.cards.length * 0.25,
+                rotate: 20 * i - deck.cards.length * 10,
               }}
               className="relative w-60 h-96 rounded-xl border border-red bg-off-white
                          flex flex-col items-center justify-center gap-2 text-center shrink-0
@@ -95,7 +95,7 @@ export default function Home() {
               style={{
                 marginLeft: -OVERLAP_PX,
                 zIndex: hoveredKey === card.id ? 999 : deck.cards.length - i,
-                rotate: 0.5 * i - 3 - deck.cards.length * 0.25,
+                rotate: 20 * i - 3 - deck.cards.length * 10,
               }}
               className="relative w-60 h-96 rounded-xl border border-blue bg-off-white
                          flex items-center justify-center text-center px-2 shrink-0

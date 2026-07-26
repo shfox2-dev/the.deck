@@ -27,8 +27,8 @@ export default function FlashCard({
         width,
         height,
         boxShadow: gold
-          ? "0 10px 0 0 var(--color-gold-dark)"
-          : "0 10px 0 0 var(--color-green-dark)",
+          ? "0 5px 5px 0 var(--color-gold-dark)"
+          : "0 5px 5px 0 var(--color-green-dark)",
         ...style,
       }}
       className={`rounded-xl flex items-center justify-center text-center px-4 shrink-0

@@ -19,7 +19,7 @@
 @theme inline {
   --color-bg: var(--color-green-dark);
   --color-surface: var(--color-blue-light);
-  --color-border: var(--color-blue-dark);
+  --color-border: var(--color-blue);
   --color-ink: var(--color-blue-dark);
   --color-muted: var(--color-off-white);
   --color-blue: var(--color-blue);      

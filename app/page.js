@@ -14,7 +14,7 @@ const ENTRANCES = [
 // out. Higher ratio = more overlap = more cards fit on screen at once.
 const CARD_WIDTH = 240; // px, matches className="w-40"
 const OVERLAP_RATIO = deck.cards.length * CARD_WIDTH; // 0 = no overlap, closer to 1 = mostly hidden
-const OVERLAP_PX = CARD_WIDRH - 48 * CARD_WIDTH / OVERLAP_RATIO;
+const OVERLAP_PX = CARD_WIDTH - 48 * CARD_WIDTH / OVERLAP_RATIO;
 // Entrance cards use a fixed overlap instead, so they always visibly stick
 // out from the deck regardless of how OVERLAP_PX is tuned.
 const ENTRANCE_OVERLAP_PX = 124;

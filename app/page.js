@@ -24,7 +24,7 @@ export default function Home() {
   const ENTRANCE_OVERLAP_PX = 200;
 
   // A green-dark drop shadow instead of a border, per the new card style.
-  const cardShadow = "0 5px 5py 0 var(--color-green-dark)";
+  const cardShadow = "5px 5px 4px 0 var(--color-green-dark)";
 
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-20 relative">

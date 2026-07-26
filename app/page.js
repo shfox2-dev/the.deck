@@ -20,8 +20,8 @@ export default function Home() {
   
   const CARD_WIDTH = 240;
   const DECK_SPACE = deck.cards.length * CARD_WIDTH;
-  const OVERLAP_PX = CARD_WIDTH - 48 * CARD_WIDTH / DECK_SPACE;
-  const ENTRANCE_OVERLAP_PX = 124;
+  const OVERLAP_PX = CARD_WIDTH - 96 * CARD_WIDTH / DECK_SPACE;
+  const ENTRANCE_OVERLAP_PX = 200;
 
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-20 relative">

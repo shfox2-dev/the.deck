@@ -17,7 +17,7 @@ const OVERLAP_RATIO = 0.9; // 0 = no overlap, closer to 1 = mostly hidden
 const OVERLAP_PX = CARD_WIDTH * OVERLAP_RATIO;
 // Entrance cards use a fixed overlap instead, so they always visibly stick
 // out from the deck regardless of how OVERLAP_PX is tuned.
-const ENTRANCE_OVERLAP_PX = 12;
+const ENTRANCE_OVERLAP_PX = 96;
 
 export default function Home() {
   // Track which card is hovered so we can force its z-index above everything
@@ -29,36 +29,36 @@ export default function Home() {
   const [deck] = useState(() => getDecks()[0]);
 
   return (
-    <main className="min-h-screen bg-bg flex flex-col items-center justify-center gap-10 px-6 py-20 relative">
+    <main className="min-h-screen bg-gold-dark flex flex-col items-center justify-center gap-10 px-6 py-20 relative">
       <button
         aria-label="Open menu"
         onClick={() => setMenuOpen(true)}
-        className="absolute top-6 left-6 w-10 h-10 rounded-lg border border-border bg-surface
+        className="absolute top-6 left-6 w-10 h-10 rounded-lg border border-gold bg-gold
                    flex flex-col items-center justify-center gap-1"
       >
-        <span className="block w-5 h-0.5 bg-green-light" />
-        <span className="block w-5 h-0.5 bg-green-light" />
-        <span className="block w-5 h-0.5 bg-green-light" />
+        <span className="block w-5 h-0.5 bg-gold-med" />
+        <span className="block w-5 h-0.5 bg-gold-med" />
+        <span className="block w-5 h-0.5 bg-gold-med" />
       </button>
 
       {menuOpen && (
         <div className="fixed inset-0 z-[1000] flex">
           <div
-            className="fixed inset-0 bg-green-light/40"
+            className="fixed inset-0 bg-green-light/0"
             onClick={() => setMenuOpen(false)}
           />
-          <nav className="relative w-64 h-full bg-surface border-r border-border p-6 flex flex-col gap-4">
+          <nav className="relative w-64 h-full bg-gold border-r border-gold-med p-6 flex flex-col gap-4">
             <button
               aria-label="Close menu"
               onClick={() => setMenuOpen(false)}
-              className="self-end text-green-dark text-sm"
+              className="self-end text-gold-med text-sm"
             >
               Close
             </button>
-            <Link href="/" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
+            <Link href="/" className="text-gold-med text-sm font-medium" onClick={() => setMenuOpen(false)}>
               Home
             </Link>
-            <Link href="/admin" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
+            <Link href="/admin" className="text-gold-med text-sm font-medium" onClick={() => setMenuOpen(false)}>
               Manage decks
             </Link>
           </nav>
@@ -88,7 +88,7 @@ export default function Home() {
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
               <span className="text-xl" aria-hidden="true">{e.icon}</span>
-              <span className="text-sm font-medium text-blue-dark">{e.label}</span>
+              <span className="text-xl font-medium text-blue-dark">{e.label}</span>
             </Link>
           ))}
           {deck.cards.map((card, i) => (
@@ -104,7 +104,7 @@ export default function Home() {
                          flex items-center justify-center text-center px-2 shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
-              <span className="text-sm font-medium text-blue-light">{card.word}</span>
+              <span className="text-xl font-medium text-blue-light">{card.word}</span>
             </div>
           ))}
         </div>

@@ -80,6 +80,7 @@ export default function Daily() {
           </nav>
         </div>
       )}
+</div>
         <p className="text-sm text-green-light">Solved in</p>
         <h1 className="text-3xl font-medium text-green-light">{elapsed}s</h1>
         <div className="w-full max-w-xs text-left">
@@ -104,8 +105,43 @@ export default function Daily() {
 
   return (
     <main className="min-h-screen bg-bg flex flex-col items-center justify-center gap-6 px-6 text-center">
+          <button
+        aria-label="Open menu"
+        onClick={() => setMenuOpen(true)}
+        className="absolute top-6 left-6 w-10 h-10 rounded-lg border border-green-light bg-green-light
+                   flex flex-col items-center justify-center gap-1"
+      >
+        <span className="block w-5 h-0.5 bg-green-dark" />
+        <span className="block w-5 h-0.5 bg-green-dark" />
+        <span className="block w-5 h-0.5 bg-green-dark" />
+      </button>
+
+      {menuOpen && (
+        <div className="fixed inset-0 z-[1000] flex">
+          <div
+            className="fixed inset-0 bg-green-light/0"
+            onClick={() => setMenuOpen(false)}
+          />
+          <nav className="relative w-44 h-full bg-green-light border-r border-green-light p-6 flex flex-col gap-4">
+            <button
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+              className="self-end text-green-dark text-sm"
+            >
+              Close
+            </button>
+            <Link href="/" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
+              The Deck
+            </Link>
+            <Link href="/admin" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
+              Manage decks
+            </Link>
+          </nav>
+        </div>
+      )}
+        </div>
       {isDebut && (
-        <p className="text-xs font-medium text-gold-ink bg-gold/30 px-3 py-1 rounded-full">
+        <p className="text-xs font-medium text-gold-dark bg-gold-med px-3 py-1 rounded-full">
           New Card
         </p>
       )}
@@ -115,7 +151,7 @@ export default function Daily() {
         className={`w-72 rounded-2xl border px-6 py-8 text-center
           ${isDebut ? "border-gold-light bg-gold-med" : "border-blue bg-off-white"}`}
       >
-        <p className="text-gold-dark text-blue">{card.definition}</p>
+        <p className="text-muted text-blue">{card.definition}</p>
       </div>
 
       <form onSubmit={submit} className="flex flex-col items-center gap-3 w-72">
@@ -128,12 +164,12 @@ export default function Daily() {
         />
         <button
           type="submit"
-          className="px-5 py-2 rounded-lg bg-brand-blue text-white text-sm"
+          className="px-5 py-2 rounded-lg bg-green-light text-green-dark text-sm"
         >
           Submit
         </button>
         {result === "wrong" && (
-          <p className="text-sm text-brand-red">Not quite — try again</p>
+          <p className="text-sm text-red">Not quite — try again</p>
         )}
       </form>
     </main>

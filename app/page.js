@@ -36,29 +36,29 @@ export default function Home() {
         className="absolute top-6 left-6 w-10 h-10 rounded-lg border border-border bg-surface
                    flex flex-col items-center justify-center gap-1"
       >
-        <span className="block w-5 h-0.5 bg-ink" />
-        <span className="block w-5 h-0.5 bg-ink" />
-        <span className="block w-5 h-0.5 bg-ink" />
+        <span className="block w-5 h-0.5 bg-green-light" />
+        <span className="block w-5 h-0.5 bg-green-light" />
+        <span className="block w-5 h-0.5 bg-green-light" />
       </button>
 
       {menuOpen && (
         <div className="fixed inset-0 z-[1000] flex">
           <div
-            className="fixed inset-0 bg-ink/40"
+            className="fixed inset-0 bg-green-light/40"
             onClick={() => setMenuOpen(false)}
           />
           <nav className="relative w-64 h-full bg-surface border-r border-border p-6 flex flex-col gap-4">
             <button
               aria-label="Close menu"
               onClick={() => setMenuOpen(false)}
-              className="self-end text-muted text-sm"
+              className="self-end text-green-dark text-sm"
             >
               Close
             </button>
-            <Link href="/" className="text-ink text-sm font-medium" onClick={() => setMenuOpen(false)}>
+            <Link href="/" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
               Home
             </Link>
-            <Link href="/admin" className="text-ink text-sm font-medium" onClick={() => setMenuOpen(false)}>
+            <Link href="/admin" className="text-green-dark text-sm font-medium" onClick={() => setMenuOpen(false)}>
               Manage decks
             </Link>
           </nav>
@@ -83,12 +83,12 @@ export default function Home() {
                 marginLeft: i === 0 ? 0 : -ENTRANCE_OVERLAP_PX,
                 zIndex: hoveredKey === e.href ? 999 : deck.cards.length + 3 - i,
               }}
-              className="relative w-40 h-56 rounded-xl border border-border bg-brand-blue
+              className="relative w-40 h-56 rounded-xl border border-blue-dark bg-blue-light
                          flex flex-col items-center justify-center gap-2 text-center shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
               <span className="text-xl" aria-hidden="true">{e.icon}</span>
-              <span className="text-sm font-medium text-ink">{e.label}</span>
+              <span className="text-sm font-medium text-blue-dark">{e.label}</span>
             </Link>
           ))}
           {deck.cards.map((card, i) => (
@@ -100,11 +100,11 @@ export default function Home() {
                 marginLeft: -OVERLAP_PX,
                 zIndex: hoveredKey === card.id ? 999 : deck.cards.length - i,
               }}
-              className="relative w-40 h-56 rounded-xl border border-border bg-surface
+              className="relative w-40 h-56 rounded-xl border border-blue-light bg-blue-dark
                          flex items-center justify-center text-center px-2 shrink-0
                          transition-transform duration-200 ease-out hover:-translate-y-6"
             >
-              <span className="text-sm font-medium text-ink">{card.word}</span>
+              <span className="text-sm font-medium text-blue-light">{card.word}</span>
             </div>
           ))}
         </div>

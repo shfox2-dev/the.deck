@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { getDecks, addDeck } from "@/lib/decks";
-import BurgerMenu from "@/components/BurgerMenu";
+import Header from "@/components/Header";
 
 export default function AdminHome() {
   const [decks, setDecks] = useState(() => getDecks());
@@ -19,7 +19,7 @@ export default function AdminHome() {
 
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center gap-10 px-6 py-16">
-      <BurgerMenu />
+      <Header />
 
       <div className="text-center">
         <p className="text-sm text-off-white">Manage decks</p>
@@ -58,10 +58,6 @@ export default function AdminHome() {
           </button>
         </div>
       </form>
-
-      <Link href="/" className="text-sm underline text-off-white">
-        Back to the deck
-      </Link>
     </main>
   );
 }

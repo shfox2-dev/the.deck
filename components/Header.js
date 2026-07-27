@@ -17,7 +17,7 @@ export default function Header() {
       >
         {/* Fixed width per the design note; flag to revisit if a different
             size or per-page scaling is wanted. */}
-        <Image src="/logo.png" alt="The Deck" width={160} height={46} priority />
+        <Image src="/logo.png" alt="The Deck" width={240} height={69} priority />
       </Link>
 
       <button

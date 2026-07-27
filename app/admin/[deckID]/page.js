@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getDeck, addCard, deleteCard, isDebutToday, addGroup, setCardGroup } from "@/lib/decks";
-import BurgerMenu from "@/components/BurgerMenu";
+import Header from "@/components/Header";
 
 export default function DeckAdmin() {
   // NOTE: this key must match the folder name exactly -- a folder named
@@ -58,7 +58,7 @@ export default function DeckAdmin() {
   if (!deck) {
     return (
       <main className="min-h-screen bg-green-dark flex items-center justify-center">
-        <BurgerMenu />
+        <Header />
         <p className="text-sm text-off-white">Deck not found.</p>
       </main>
     );
@@ -69,7 +69,7 @@ export default function DeckAdmin() {
 
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center gap-8 px-6 py-16">
-      <BurgerMenu />
+      <Header />
 
       <div className="text-center">
         <p className="text-sm text-off-white">Editing</p>

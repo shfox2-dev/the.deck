@@ -5,7 +5,7 @@ import Link from "next/link";
 import { getDecks, isDebutToday } from "@/lib/decks";
 import { MOCK_LEADERBOARD } from "@/lib/mockLeaderboard";
 import { getTodayResult, recordTodayResult } from "@/lib/dailyPuzzle";
-import BurgerMenu from "@/components/BurgerMenu";
+import Header from "@/components/Header";
 import FlashCard from "@/components/FlashCard";
 import Leaderboard from "@/components/Leaderboard";
 
@@ -24,11 +24,17 @@ export default function Daily() {
   const [startedAt] = useState(() => Date.now());
   const [result, setResult] = useState(null); // null | "correct" | "wrong"
   const [elapsed, setElapsed] = useState(0);
-  const [alreadyPlayed, setAlreadyPlayed] = useState(null); // null = still checking
+  // undefined = haven't checked localStorage yet, null = checked and NOT
+  // played today, a number = checked and already played with this score.
+  // Using undefined vs null (instead of null for both "unchecked" and "not
+  // played") was the actual bug -- both cases looked identical before, so
+  // the page got stuck on the loading branch forever for anyone who hadn't
+  // played yet, which is why it "returned nothing."
+  const [alreadyPlayed, setAlreadyPlayed] = useState(undefined);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    const existing = getTodayResult();
+    const existing = getTodayResult(); // a number, or null if not played
     setAlreadyPlayed(existing);
     if (existing == null) inputRef.current?.focus();
   }, []);
@@ -50,10 +56,10 @@ export default function Daily() {
   const isDebut = isDebutToday(card);
 
   // Still checking localStorage on mount -- avoid a flash of the puzzle.
-  if (alreadyPlayed === null) {
+  if (alreadyPlayed === undefined) {
     return (
       <main className="min-h-screen bg-green-dark flex items-center justify-center">
-        <BurgerMenu />
+        <Header />
       </main>
     );
   }
@@ -68,7 +74,7 @@ export default function Daily() {
 
     return (
       <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
-        <BurgerMenu />
+        <Header />
         <p className="text-sm text-off-white">
           {alreadyPlayed != null && result !== "correct" ? "Already solved today in" : "Solved in"}
         </p>
@@ -81,7 +87,7 @@ export default function Daily() {
 
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
-      <BurgerMenu />
+      <Header />
 
       {isDebut && (
         <p className="text-xs font-medium text-gold-dark bg-gold-med px-3 py-1 rounded-full">
@@ -91,7 +97,7 @@ export default function Daily() {
       <p className="text-sm text-off-white">Today's puzzle · type the word</p>
 
       <FlashCard gold={isDebut} size="md">
-        <p className="text-sm">{card.definition}</p>
+        <p className="text-xl">{card.definition}</p>
       </FlashCard>
 
       <form onSubmit={submit} className="flex flex-col items-center gap-3 w-72">

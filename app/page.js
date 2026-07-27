@@ -20,11 +20,11 @@ export default function Home() {
 
   const CARD_WIDTH = 240;
   const DECK_SPACE = deck.cards.length * CARD_WIDTH;
-  const OVERLAP_PX = CARD_WIDTH - 124 * CARD_WIDTH / DECK_SPACE;
+  const OVERLAP_PX = CARD_WIDTH - 160 * CARD_WIDTH / DECK_SPACE;
   const ENTRANCE_OVERLAP_PX = 200;
 
   // A green-dark drop shadow instead of a border, per the new card style.
-  const cardShadow = "10px 10px 4px 0 var(--color-green-dark)";
+  const cardShadow = "8px 0 4px 0 var(--color-green-dark)";
 
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-20 relative">

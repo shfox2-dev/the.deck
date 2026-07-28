@@ -5,8 +5,17 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getDeck, addCard, deleteCard, isDebutToday, addGroup, setCardGroup } from "@/lib/decks";
 import Header from "@/components/Header";
+import AuthGate from "@/components/AuthGate";
 
 export default function DeckAdmin() {
+  return (
+    <AuthGate adminOnly>
+      <DeckAdminContent />
+    </AuthGate>
+  );
+}
+
+function DeckAdminContent() {
   // NOTE: this key must match the folder name exactly -- a folder named
   // [deckID] gives you params.deckID, not params.deckId. Keep this in sync
   // if the folder is ever renamed.

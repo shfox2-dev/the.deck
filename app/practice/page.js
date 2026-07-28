@@ -2,15 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { getDecks } from "@/lib/decks";
+import { getDeck } from "@/lib/decks";
 import { logPracticeToday, computeStreak, getPracticeLog } from "@/lib/streak";
 import Header from "@/components/Header";
 import FlashCard from "@/components/FlashCard";
+import AuthGate from "@/components/AuthGate";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function Practice() {
-  // TODO: once accounts/rosters exist, use the student's actual assigned
-  // group instead of always the first deck.
-  const [deck] = useState(() => getDecks()[0]);
+  return (
+    <AuthGate>
+      <PracticeContent />
+    </AuthGate>
+  );
+}
+
+function PracticeContent() {
+  // AuthGate guarantees roster is non-null by the time this renders.
+  const { roster } = useAuth();
+  const [deck] = useState(() => getDeck(roster.deck_id));
   const [mode, setMode] = useState(null); // null | "matching" | "expert"
 
   return (

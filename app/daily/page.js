@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { getDecks, isDebutToday } from "@/lib/decks";
+import { getDeck, isDebutToday } from "@/lib/decks";
 import { MOCK_LEADERBOARD } from "@/lib/mockLeaderboard";
 import { getTodayResult, recordTodayResult } from "@/lib/dailyPuzzle";
 import Header from "@/components/Header";
 import FlashCard from "@/components/FlashCard";
 import Leaderboard from "@/components/Leaderboard";
+import AuthGate from "@/components/AuthGate";
+import { useAuth } from "@/components/AuthProvider";
 
 // Same card for every student in the group: pick deterministically by day.
 function dailyCard(cards) {
@@ -16,9 +18,17 @@ function dailyCard(cards) {
 }
 
 export default function Daily() {
-  // TODO: once accounts/rosters exist, use the student's actual assigned
-  // group instead of always the first deck.
-  const [cards] = useState(() => getDecks()[0].cards);
+  return (
+    <AuthGate>
+      <DailyContent />
+    </AuthGate>
+  );
+}
+
+function DailyContent() {
+  // AuthGate guarantees roster is non-null by the time this renders.
+  const { roster } = useAuth();
+  const [cards] = useState(() => getDeck(roster.deck_id).cards);
   const [card] = useState(() => dailyCard(cards));
   const [guess, setGuess] = useState("");
   const [startedAt] = useState(() => Date.now());

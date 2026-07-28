@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
+import { useAuth } from "@/components/AuthProvider";
 
 // Logo + burger menu, combined so every page gets both with one line.
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const { roster, signOut } = useAuth();
+  const isAdmin = roster?.role === "admin";
 
   return (
     <>
@@ -15,9 +18,7 @@ export default function Header() {
         aria-label="The Deck home"
         className="fixed top-4 left-1/2 -translate-x-1/2 z-[900]"
       >
-        {/* Fixed width per the design note; flag to revisit if a different
-            size or per-page scaling is wanted. */}
-        <Image src="/logo.png" alt="The Deck" width={240} height={69} priority />
+        <Image src="/logo.png" alt="The Deck" width={160} height={46} priority />
       </Link>
 
       <button
@@ -54,9 +55,20 @@ export default function Header() {
             <Link href="/duel" className="text-green-dark text-xl font-medium" onClick={() => setOpen(false)}>
               Duel
             </Link>
-            <Link href="/admin" className="text-green-dark text-xl font-medium" onClick={() => setOpen(false)}>
-              Manage decks
-            </Link>
+            {isAdmin && (
+              <Link href="/admin" className="text-green-dark text-xl font-medium" onClick={() => setOpen(false)}>
+                Manage decks
+              </Link>
+            )}
+            <button
+              onClick={() => {
+                setOpen(false);
+                signOut();
+              }}
+              className="text-green-dark text-xl font-medium text-left mt-auto"
+            >
+              Sign out
+            </button>
           </nav>
         </div>
       )}

@@ -1,8 +1,10 @@
 "use client";
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { getDecks } from "@/lib/decks";
+import { getDeck } from "@/lib/decks";
 import Header from "@/components/Header";
+import AuthGate from "@/components/AuthGate";
+import { useAuth } from "@/components/AuthProvider";
 
 const ENTRANCES = [
   { href: "/daily", label: "The Daily Card" },
@@ -13,14 +15,22 @@ const ENTRANCES = [
 const cardShadow = "5px 0 2px 0 var(--color-green-dark)";
 
 export default function Home() {
+  return (
+    <AuthGate>
+      <HomeContent />
+    </AuthGate>
+  );
+}
+
+function HomeContent() {
+  // AuthGate guarantees roster is non-null by the time this renders.
+  const { roster } = useAuth();
   // Track which card is hovered so we can force its z-index above everything
   // else via inline style -- a hover: class can't win against inline zIndex.
   const [hoveredKey, setHoveredKey] = useState(null);
   // Which regular deck cards are currently flipped to show their definition.
   const [flipped, setFlipped] = useState(() => new Set());
-  // TODO: once accounts/rosters exist, this should be the student's actual
-  // assigned group instead of always the first deck.
-  const [deck] = useState(() => getDecks()[0]);
+  const [deck] = useState(() => getDeck(roster.deck_id));
 
   const CARD_WIDTH = 240;
   const DECK_SPACE = deck.cards.length * CARD_WIDTH;

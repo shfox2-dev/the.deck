@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 // Runs on every request. Refreshes the login session cookie so it doesn't
 // silently expire while someone's using the app -- required by Supabase's
 // SSR auth pattern, not optional boilerplate.
-export async function middleware(request) {
+export async function proxy(request) {
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(

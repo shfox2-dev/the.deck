@@ -4,8 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { getDecks, addDeck } from "@/lib/decks";
 import Header from "@/components/Header";
+import AuthGate from "@/components/AuthGate";
 
 export default function AdminHome() {
+  return (
+    <AuthGate adminOnly>
+      <AdminHomeContent />
+    </AuthGate>
+  );
+}
+
+function AdminHomeContent() {
   const [decks, setDecks] = useState(() => getDecks());
   const [name, setName] = useState("");
 

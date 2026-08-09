@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getDeck, isDebutToday } from "@/lib/decks";
 import { MOCK_LEADERBOARD } from "@/lib/mockLeaderboard";
 import { getTodayResult, recordTodayResult } from "@/lib/dailyPuzzle";
+import { effectiveDeckId } from "@/lib/activeDeck";
 import Header from "@/components/Header";
 import FlashCard from "@/components/FlashCard";
 import Leaderboard from "@/components/Leaderboard";
@@ -28,7 +29,25 @@ export default function Daily() {
 function DailyContent() {
   // AuthGate guarantees roster is non-null by the time this renders.
   const { roster } = useAuth();
-  const [cards] = useState(() => getDeck(roster.deck_id).cards);
+  const [deckId] = useState(() => effectiveDeckId(roster));
+  const deck = deckId ? getDeck(deckId) : null;
+
+  if (!deck) {
+    return (
+      <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-4 px-6 text-center">
+        <Header />
+        <p className="text-off-white text-sm max-w-xs">
+          Pick a deck first from "Choose Your Deck" on the home page.
+        </p>
+        <Link href="/" className="text-sm underline text-off-white">Go there now</Link>
+      </main>
+    );
+  }
+
+  return <DailyGame cards={deck.cards} />;
+}
+
+function DailyGame({ cards }) {
   const [card] = useState(() => dailyCard(cards));
   const [guess, setGuess] = useState("");
   const [startedAt] = useState(() => Date.now());

@@ -48,6 +48,9 @@ function HomeContent() {
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-24 relative">
       <Header />
+      <p className="text-off-white text-xs fixed top-20 left-1/2 -translate-x-1/2 z-[900]">
+        DEBUG: {roster.email} → {roster.deck_id}
+      </p>
 
       {/* Desktop / tablet: the fanned, hoverable deck. Hidden on small screens
           in favor of the one-card-at-a-time swipe view below. */}

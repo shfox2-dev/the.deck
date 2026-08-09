@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getDeck } from "@/lib/decks";
 import { logPracticeToday, computeStreak, getPracticeLog } from "@/lib/streak";
+import { effectiveDeckId } from "@/lib/activeDeck";
 import Header from "@/components/Header";
 import FlashCard from "@/components/FlashCard";
 import AuthGate from "@/components/AuthGate";
@@ -20,8 +21,21 @@ export default function Practice() {
 function PracticeContent() {
   // AuthGate guarantees roster is non-null by the time this renders.
   const { roster } = useAuth();
-  const [deck] = useState(() => getDeck(roster.deck_id));
+  const [deckId] = useState(() => effectiveDeckId(roster));
+  const deck = deckId ? getDeck(deckId) : null;
   const [mode, setMode] = useState(null); // null | "matching" | "expert"
+
+  if (!deck) {
+    return (
+      <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-4 px-6 text-center">
+        <Header />
+        <p className="text-off-white text-sm max-w-xs">
+          Pick a deck first from "Choose Your Deck" on the home page.
+        </p>
+        <Link href="/" className="text-sm underline text-off-white">Go there now</Link>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-8 px-6 py-16">

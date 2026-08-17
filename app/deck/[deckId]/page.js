@@ -29,7 +29,21 @@ function DeckPageContent() {
   const { roster } = useAuth();
   const [hoveredKey, setHoveredKey] = useState(null);
   const [flipped, setFlipped] = useState(() => new Set());
-  const [deck] = useState(() => getDeck(deckId));
+  const [deck, setDeck] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    getDeck(deckId).then((d) => {
+      if (active) {
+        setDeck(d);
+        setLoading(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [deckId]);
 
   // Remember this as "the deck I'm currently in" -- matters for admins,
   // since Daily/Mastery/Duel need to know which deck to use when an admin
@@ -39,6 +53,14 @@ function DeckPageContent() {
   }, [deckId]);
 
   const CARD_WIDTH = 240;
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+        <Header />
+      </main>
+    );
+  }
 
   if (!deck) {
     return (

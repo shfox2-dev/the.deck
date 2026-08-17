@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getDecks, addDeck } from "@/lib/decks";
 import Header from "@/components/Header";
@@ -15,15 +15,35 @@ export default function AdminHome() {
 }
 
 function AdminHomeContent() {
-  const [decks, setDecks] = useState(() => getDecks());
+  const [decks, setDecks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
 
-  function handleAddDeck(e) {
+  function refresh() {
+    getDecks().then(setDecks);
+  }
+
+  useEffect(() => {
+    getDecks().then((d) => {
+      setDecks(d);
+      setLoading(false);
+    });
+  }, []);
+
+  async function handleAddDeck(e) {
     e.preventDefault();
     if (!name.trim()) return;
-    addDeck(name.trim());
-    setDecks(getDecks());
+    await addDeck(name.trim());
+    refresh();
     setName("");
+  }
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+        <Header />
+      </main>
+    );
   }
 
   return (

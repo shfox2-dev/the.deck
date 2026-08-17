@@ -30,7 +30,33 @@ function DailyContent() {
   // AuthGate guarantees roster is non-null by the time this renders.
   const { roster } = useAuth();
   const [deckId] = useState(() => effectiveDeckId(roster));
-  const deck = deckId ? getDeck(deckId) : null;
+  const [deck, setDeck] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!deckId) {
+      setLoading(false);
+      return;
+    }
+    let active = true;
+    getDeck(deckId).then((d) => {
+      if (active) {
+        setDeck(d);
+        setLoading(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [deckId]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+        <Header />
+      </main>
+    );
+  }
 
   if (!deck) {
     return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getDeck, addCard, deleteCard, isDebutToday, addGroup, setCardGroup } from "@/lib/decks";
@@ -20,7 +20,8 @@ function DeckAdminContent() {
   // [deckID] gives you params.deckID, not params.deckId. Keep this in sync
   // if the folder is ever renamed.
   const { deckID } = useParams();
-  const [deck, setDeck] = useState(() => getDeck(deckID));
+  const [deck, setDeck] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [word, setWord] = useState("");
   const [definition, setDefinition] = useState("");
   const [debutDate, setDebutDate] = useState("");
@@ -28,21 +29,28 @@ function DeckAdminContent() {
   const [newGroupName, setNewGroupName] = useState("");
 
   function refresh() {
-    setDeck(getDeck(deckID));
+    getDeck(deckID).then(setDeck);
   }
 
-  function handleAddGroup(e) {
+  useEffect(() => {
+    getDeck(deckID).then((d) => {
+      setDeck(d);
+      setLoading(false);
+    });
+  }, [deckID]);
+
+  async function handleAddGroup(e) {
     e.preventDefault();
     if (!newGroupName.trim()) return;
-    addGroup(deckID, newGroupName.trim());
+    await addGroup(deckID, newGroupName.trim());
     setNewGroupName("");
     refresh();
   }
 
-  function handleAddCard(e) {
+  async function handleAddCard(e) {
     e.preventDefault();
     if (!word.trim() || !definition.trim()) return;
-    addCard(deckID, {
+    await addCard(deckID, {
       word: word.trim(),
       definition: definition.trim(),
       debutDate: debutDate || null,
@@ -54,14 +62,22 @@ function DeckAdminContent() {
     refresh();
   }
 
-  function handleDelete(cardId) {
-    deleteCard(deckID, cardId);
+  async function handleDelete(cardId) {
+    await deleteCard(deckID, cardId);
     refresh();
   }
 
-  function handleReassign(cardId, newGroupId) {
-    setCardGroup(deckID, cardId, newGroupId);
+  async function handleReassign(cardId, newGroupId) {
+    await setCardGroup(deckID, cardId, newGroupId);
     refresh();
+  }
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+        <Header />
+      </main>
+    );
   }
 
   if (!deck) {

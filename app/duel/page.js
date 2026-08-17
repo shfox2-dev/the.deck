@@ -13,15 +13,26 @@ function shuffledDeck(cards) {
 export default function Duel() {
   // TODO: once accounts/rosters exist, use the student's actual assigned
   // group instead of always the first deck.
-  const [cards] = useState(() => getDecks()[0].cards);
+  const [questions, setQuestions] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [stage, setStage] = useState("intro"); // intro | playing | roundEnd | done
-  const [questions] = useState(() => shuffledDeck(cards));
   const [round, setRound] = useState(0);
   const [guess, setGuess] = useState("");
   const [youScore, setYouScore] = useState(0);
   const [botScore, setBotScore] = useState(0);
   const [roundWinner, setRoundWinner] = useState(null);
   const botTimer = useRef(null);
+
+  useEffect(() => {
+    getDecks().then((decks) => {
+      setQuestions(shuffledDeck(decks[0]?.cards || []));
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <main className="min-h-screen bg-green-dark flex items-center justify-center" />;
+  }
 
   const card = questions[round];
 

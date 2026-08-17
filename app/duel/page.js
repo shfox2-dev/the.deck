@@ -30,18 +30,12 @@ export default function Duel() {
     });
   }, []);
 
-  if (loading) {
-    return <main className="min-h-screen bg-green-dark flex items-center justify-center" />;
-  }
-
-  const card = questions[round];
-
   function startDuel() {
     setStage("playing");
   }
 
   useEffect(() => {
-    if (stage !== "playing") return;
+    if (stage !== "playing" || !questions) return;
     // Bot "thinks" for a random 1.5-4s, standing in for a real opponent
     // until live matchmaking is wired up.
     const delay = 1500 + Math.random() * 2500;
@@ -51,7 +45,16 @@ export default function Duel() {
       setStage("roundEnd");
     }, delay);
     return () => clearTimeout(botTimer.current);
-  }, [round, stage]);
+  }, [round, stage, questions]);
+
+  // Every hook above this line runs on every render, no exceptions -- that's
+  // what the Rules of Hooks require. Only now, after all hooks are declared,
+  // is it safe to conditionally return early.
+  if (loading) {
+    return <main className="min-h-screen bg-green-dark flex items-center justify-center" />;
+  }
+
+  const card = questions[round];
 
   function submitGuess(e) {
     e.preventDefault();

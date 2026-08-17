@@ -38,7 +38,23 @@ function HomeRouter() {
 // Admin-only: one flashcard per deck they manage. Click one to enter that
 // deck's normal student-facing view.
 function DeckChooser() {
-  const [decks] = useState(() => getDecks());
+  const [decks, setDecks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getDecks().then((d) => {
+      setDecks(d);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+        <Header />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-24">

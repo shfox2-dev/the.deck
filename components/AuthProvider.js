@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
     // the allowlist yet.
     const { data } = await supabase
       .from("roster")
-      .select("name, email, role, deck_id")
+      .select("name, email, role, deck_id, honorific")
       .eq("email", currentUser.email)
       .maybeSingle();
     setRoster(data || null);

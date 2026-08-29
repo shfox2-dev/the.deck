@@ -55,6 +55,9 @@ export default function Header() {
             <Link href="/duel" className="text-green-dark text-xl font-medium" onClick={() => setOpen(false)}>
               Duel
             </Link>
+            <Link href="/profile" className="text-green-dark text-xl font-medium" onClick={() => setOpen(false)}>
+              Profile
+            </Link>
             {isAdmin && (
               <Link href="/admin" className="text-green-dark text-xl font-medium" onClick={() => setOpen(false)}>
                 Manage decks

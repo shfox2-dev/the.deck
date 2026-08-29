@@ -1,5 +1,6 @@
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
+import { DuelProvider } from "@/components/DuelProvider";
 
 export const metadata = {
   title: "The Deck",
@@ -13,7 +14,9 @@ export default function RootLayout({ children }) {
           it was overriding the Georgia serif set in globals.css, since class
           selectors beat plain element selectors in CSS specificity. */}
       <body className="min-h-full flex flex-col">
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <DuelProvider>{children}</DuelProvider>
+        </AuthProvider>
       </body>
     </html>
   );

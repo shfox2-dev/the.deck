@@ -7,6 +7,7 @@ import { setActiveDeckId } from "@/lib/activeDeck";
 import Header from "@/components/Header";
 import AuthGate from "@/components/AuthGate";
 import { useAuth } from "@/components/AuthProvider";
+import ActiveUsersList from "@/components/ActiveUsersList";
 
 const ENTRANCES = [
   { href: "/daily", label: "The Daily Card" },
@@ -89,11 +90,7 @@ function DeckPageContent() {
     <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-24 relative">
       <Header />
 
-      {roster.role === "admin" && (
-        <p className="fixed top-20 left-1/2 -translate-x-1/2 z-[900] text-off-white text-xs">
-          {deck.name}
-        </p>
-      )}
+      <ActiveUsersList deckId={deckId} deckName={deck.name} me={roster} />
 
       <div className="hidden sm:block w-full overflow-x-auto" style={{ perspective: 1200 }}>
         <div className="flex px-8 py-8 w-max mx-auto">

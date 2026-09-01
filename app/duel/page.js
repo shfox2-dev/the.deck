@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getDeck, pickRoundCardIds } from "@/lib/decks";
+import { getDuelLadder } from "@/lib/duelLadder";
 import { effectiveDeckId } from "@/lib/activeDeck";
 import { useActiveUsers, presenceLabel } from "@/lib/presence";
 import Header from "@/components/Header";
+import Leaderboard from "@/components/Leaderboard";
 import AuthGate from "@/components/AuthGate";
 import { useAuth } from "@/components/AuthProvider";
 import { useDuel } from "@/components/DuelProvider";
@@ -24,6 +26,7 @@ function DuelContent() {
   const [deckId] = useState(() => effectiveDeckId(roster));
   const [deck, setDeck] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [ladder, setLadder] = useState([]);
 
   useEffect(() => {
     if (!deckId) {
@@ -42,6 +45,11 @@ function DuelContent() {
     };
   }, [deckId]);
 
+  useEffect(() => {
+    if (!deckId) return;
+    getDuelLadder(deckId).then(setLadder);
+  }, [deckId]);
+
   // Presence must still be called every render regardless of loading state,
   // per the Rules of Hooks -- deckId may be null briefly, the hook itself
   // guards against that internally.
@@ -50,7 +58,7 @@ function DuelContent() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+      <main className="min-h-dvh bg-green-dark flex items-center justify-center">
         <Header />
       </main>
     );
@@ -58,7 +66,7 @@ function DuelContent() {
 
   if (!deck) {
     return (
-      <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-4 px-6 text-center">
+      <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-4 px-6 text-center">
         <Header />
         <p className="text-off-white text-sm max-w-xs">
           Pick a deck first from "Choose Your Deck" on the home page.
@@ -74,12 +82,28 @@ function DuelContent() {
     sendChallenge(user, deckId, cardIds);
   }
 
+  const ladderRows = ladder.map((r) => ({
+    name: r.email === roster.email ? "You" : r.name,
+    display: `#${r.rank}`,
+  }));
+
   return (
-    <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-8 px-6 py-16">
+    <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-8 px-6 py-16">
       <Header />
       <div className="text-center">
         <p className="text-sm text-off-white">{deck.name}</p>
-        <h1 className="text-2xl font-medium mt-1 text-off-white">Who's active</h1>
+        <h1 className="text-2xl font-medium mt-1 text-off-white">Duel</h1>
+      </div>
+
+      {ladderRows.length > 0 && (
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-xs text-off-white/80">Beat the top of the ladder to take their spot</p>
+          <Leaderboard title="Duel ladder" rows={ladderRows} />
+        </div>
+      )}
+
+      <div className="text-center">
+        <h2 className="text-lg font-medium text-off-white">Who's active</h2>
       </div>
 
       {others.length === 0 ? (

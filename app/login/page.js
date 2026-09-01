@@ -14,7 +14,7 @@ export default function Login() {
   }, [loading, user, roster, router]);
 
   return (
-    <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-8 px-6 text-center">
+    <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-8 px-6 text-center">
       <Image src="/logo.png" alt="The Deck" width={200} height={58} priority />
 
       {!loading && user && !roster ? (

@@ -29,7 +29,7 @@ function HomeRouter() {
   }, [roster, router]);
 
   if (roster.role !== "admin") {
-    return <main className="min-h-screen bg-green-dark" />; // brief redirect flash
+    return <main className="min-h-dvh bg-green-dark" />; // brief redirect flash
   }
 
   return <DeckChooser />;
@@ -50,14 +50,14 @@ function DeckChooser() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+      <main className="min-h-dvh bg-green-dark flex items-center justify-center">
         <Header />
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-24">
+    <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-10 px-6 py-24">
       <Header />
       <div className="text-center">
         <p className="text-sm text-off-white">Admin</p>

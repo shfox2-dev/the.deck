@@ -53,7 +53,7 @@ export function DuelProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roster?.email]);
 
-  function sendChallenge(target, deckId, cardIds) {
+  function sendChallenge(target, deckId, cardIds, groupName) {
     const duelId = crypto.randomUUID();
     setOutgoing({ duelId, targetEmail: target.email, targetName: presenceFirstName(target), status: "waiting", deckId, cardIds });
     const targetChannel = supabase.channel(`user:${target.email}`);
@@ -62,7 +62,7 @@ export function DuelProvider({ children }) {
         targetChannel.send({
           type: "broadcast",
           event: "challenge",
-          payload: { duelId, fromEmail: roster.email, fromName: roster.name, deckId, cardIds },
+          payload: { duelId, fromEmail: roster.email, fromName: roster.name, deckId, cardIds, groupName },
         });
         setTimeout(() => supabase.removeChannel(targetChannel), 2000);
       }
@@ -100,7 +100,8 @@ export function DuelProvider({ children }) {
         <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-green-dark/60 px-6">
           <div className="bg-off-white rounded-xl p-6 max-w-xs text-center flex flex-col gap-4">
             <p className="text-blue">
-              <span className="font-medium">{incoming.fromName}</span> has challenged you to a duel. Do you accept?
+              <span className="font-medium">{incoming.fromName}</span> has challenged you to a duel
+              {incoming.groupName ? ` in ${incoming.groupName}` : ""}. Do you accept?
             </p>
             <div className="flex gap-3 justify-center">
               <button

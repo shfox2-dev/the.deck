@@ -21,7 +21,7 @@ function ProfileContent() {
   const isAdmin = roster.role === "admin";
 
   return (
-    <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
+    <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
       <Header />
       <h1 className="text-2xl font-medium text-off-white">Profile</h1>
       {isAdmin ? <AdminProfile roster={roster} /> : <StudentProfile roster={roster} />}

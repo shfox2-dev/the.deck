@@ -38,7 +38,7 @@ export function DuelProvider({ children }) {
           if (payload.accepted) {
             router.push(
               `/duel/${prev.duelId}?deckId=${prev.deckId}&cards=${prev.cardIds.join(",")}` +
-                `&opponentEmail=${encodeURIComponent(roster.email)}&opponentName=${encodeURIComponent(roster.name)}`
+                `&opponentEmail=${encodeURIComponent(prev.targetEmail)}&opponentName=${encodeURIComponent(prev.targetName)}`
             );
             return null;
           }

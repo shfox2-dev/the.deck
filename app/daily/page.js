@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getDeck, isDebutToday } from "@/lib/decks";
-import { MOCK_LEADERBOARD } from "@/lib/mockLeaderboard";
-import { getTodayResult, recordTodayResult } from "@/lib/dailyPuzzle";
+import { getTodayResult, recordTodayResult, getDailyLeaderboard } from "@/lib/dailyPuzzle";
 import { effectiveDeckId } from "@/lib/activeDeck";
+import { fitTextSizeClass } from "@/lib/textFit";
 import Header from "@/components/Header";
 import FlashCard from "@/components/FlashCard";
 import Leaderboard from "@/components/Leaderboard";
@@ -52,7 +52,7 @@ function DailyContent() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+      <main className="min-h-dvh bg-green-dark flex items-center justify-center">
         <Header />
       </main>
     );
@@ -60,7 +60,7 @@ function DailyContent() {
 
   if (!deck) {
     return (
-      <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-4 px-6 text-center">
+      <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-4 px-6 text-center">
         <Header />
         <p className="text-off-white text-sm max-w-xs">
           Pick a deck first from "Choose Your Deck" on the home page.
@@ -70,31 +70,30 @@ function DailyContent() {
     );
   }
 
-  return <DailyGame cards={deck.cards} />;
+  return <DailyGame deckId={deckId} cards={deck.cards} roster={roster} />;
 }
 
-function DailyGame({ cards }) {
+function DailyGame({ deckId, cards, roster }) {
   const [card] = useState(() => dailyCard(cards));
   const [guess, setGuess] = useState("");
   const [startedAt] = useState(() => Date.now());
   const [result, setResult] = useState(null); // null | "correct" | "wrong"
   const [elapsed, setElapsed] = useState(0);
-  // undefined = haven't checked localStorage yet, null = checked and NOT
-  // played today, a number = checked and already played with this score.
-  // Using undefined vs null (instead of null for both "unchecked" and "not
-  // played") was the actual bug -- both cases looked identical before, so
-  // the page got stuck on the loading branch forever for anyone who hadn't
-  // played yet, which is why it "returned nothing."
+  // undefined = haven't checked yet, null = checked and NOT played today,
+  // a number = checked and already played with this score.
   const [alreadyPlayed, setAlreadyPlayed] = useState(undefined);
+  const [board, setBoard] = useState([]);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    const existing = getTodayResult(); // a number, or null if not played
-    setAlreadyPlayed(existing);
-    if (existing == null) inputRef.current?.focus();
-  }, []);
+    getTodayResult(deckId, roster.email).then((existing) => {
+      setAlreadyPlayed(existing);
+      if (existing == null) inputRef.current?.focus();
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deckId, roster.email]);
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
     if (result === "correct") return;
     const correct = guess.trim().toLowerCase() === card.word.toLowerCase();
@@ -102,33 +101,42 @@ function DailyGame({ cards }) {
       const secs = Number(((Date.now() - startedAt) / 1000).toFixed(1));
       setElapsed(secs);
       setResult("correct");
-      recordTodayResult(secs);
+      await recordTodayResult(deckId, roster.email, roster.name, secs);
     } else {
       setResult("wrong");
     }
   }
 
   const isDebut = isDebutToday(card);
+  const finalTime = alreadyPlayed != null ? alreadyPlayed : elapsed;
+  const showLeaderboard = result === "correct" || alreadyPlayed != null;
 
-  // Still checking localStorage on mount -- avoid a flash of the puzzle.
+  useEffect(() => {
+    if (showLeaderboard) {
+      getDailyLeaderboard(deckId).then((rows) =>
+        setBoard(
+          rows
+            .map((r) => ({ name: r.email === roster.email ? "You" : r.name, display: `${r.elapsed_seconds}s` }))
+            .sort((a, b) => parseFloat(a.display) - parseFloat(b.display))
+        )
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showLeaderboard, deckId]);
+
+  // Still checking on mount -- avoid a flash of the puzzle for someone
+  // who's already played.
   if (alreadyPlayed === undefined) {
     return (
-      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+      <main className="min-h-dvh bg-green-dark flex items-center justify-center">
         <Header />
       </main>
     );
   }
 
-  const finalTime = alreadyPlayed != null ? alreadyPlayed : elapsed;
-  const showLeaderboard = result === "correct" || alreadyPlayed != null;
-
   if (showLeaderboard) {
-    const board = [...MOCK_LEADERBOARD.dailySpeed, { name: "You", value: finalTime }]
-      .sort((a, b) => a.value - b.value)
-      .map((r) => ({ name: r.name, display: `${r.value}s`, isYou: r.name === "You" }));
-
     return (
-      <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
+      <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
         <Header />
         <p className="text-sm text-off-white">
           {alreadyPlayed != null && result !== "correct" ? "Already solved today in" : "Solved in"}
@@ -141,7 +149,7 @@ function DailyGame({ cards }) {
   }
 
   return (
-    <main className="min-h-screen bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
+    <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
       <Header />
 
       {isDebut && (
@@ -152,7 +160,7 @@ function DailyGame({ cards }) {
       <p className="text-sm text-off-white">Today's puzzle · type the word</p>
 
       <FlashCard gold={isDebut} size="md">
-        <p className="text-xl">{card.definition}</p>
+        <p className={fitTextSizeClass(card.definition)}>{card.definition}</p>
       </FlashCard>
 
       <form onSubmit={submit} className="flex flex-col items-center gap-3 w-72">

@@ -8,6 +8,7 @@ import { recordDuelResult } from "@/lib/duelLadder";
 import { createClient } from "@/lib/supabase/client";
 import Header from "@/components/Header";
 import MatchingBoard from "@/components/MatchingBoard";
+import Leaderboard from "@/components/Leaderboard";
 import AuthGate from "@/components/AuthGate";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -98,12 +99,17 @@ function DuelMatchContent() {
   }
 
   if (result) {
+    const rows = result === "you"
+      ? [{ name: roster.name, display: "Winner" }, { name: opponentName, display: "" }]
+      : [{ name: opponentName, display: "Winner" }, { name: roster.name, display: "" }];
+
     return (
-      <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-4 px-6 text-center">
+      <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 px-6 text-center">
         <Header />
         <h1 className="text-3xl font-medium text-off-white">
           {result === "you" ? "You won!" : `${opponentName} won this time`}
         </h1>
+        <Leaderboard rows={rows} />
         <Link href="/duel" className="text-sm underline text-off-white mt-2">Back to Duel</Link>
       </main>
     );

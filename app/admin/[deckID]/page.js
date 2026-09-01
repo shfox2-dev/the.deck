@@ -74,7 +74,7 @@ function DeckAdminContent() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+      <main className="min-h-dvh bg-green-dark flex items-center justify-center">
         <Header />
       </main>
     );
@@ -82,7 +82,7 @@ function DeckAdminContent() {
 
   if (!deck) {
     return (
-      <main className="min-h-screen bg-green-dark flex items-center justify-center">
+      <main className="min-h-dvh bg-green-dark flex items-center justify-center">
         <Header />
         <p className="text-sm text-off-white">Deck not found.</p>
       </main>
@@ -93,7 +93,7 @@ function DeckAdminContent() {
   const ungrouped = deck.cards.filter((c) => !c.groupId);
 
   return (
-    <main className="min-h-screen bg-green-dark flex flex-col items-center gap-8 px-6 py-16">
+    <main className="min-h-dvh bg-green-dark flex flex-col items-center gap-8 px-6 py-16">
       <Header />
 
       <div className="text-center">

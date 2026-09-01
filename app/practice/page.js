@@ -108,22 +108,27 @@ function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-function pickRoundCards(deck) {
-  const groups = deck.groups || [];
-  const eligible = groups.filter((g) => deck.cards.filter((c) => c.groupId === g.id).length >= 2);
-  const pool = eligible.length > 0
-    ? deck.cards.filter((c) => c.groupId === eligible[Math.floor(Math.random() * eligible.length)].id)
-    : deck.cards; // fall back to the whole deck if nothing is grouped yet
-
+function pickRoundCards(deck, groupId) {
+  const pool = deck.cards.filter((c) => c.groupId === groupId);
   return shuffle(pool).slice(0, Math.min(4, pool.length));
 }
 
 function MatchingMode({ deck, onExit }) {
-  const [round, setRound] = useState(() => pickRoundCards(deck));
+  const eligibleGroups = (deck.groups || []).filter(
+    (g) => deck.cards.filter((c) => c.groupId === g.id).length >= 2
+  );
+  const [groupId, setGroupId] = useState(null);
+  const [round, setRound] = useState([]);
   const [won, setWon] = useState(false);
 
+  function startCategory(gid) {
+    setGroupId(gid);
+    setRound(pickRoundCards(deck, gid));
+    setWon(false);
+  }
+
   function newRound() {
-    setRound(pickRoundCards(deck));
+    setRound(pickRoundCards(deck, groupId));
     setWon(false);
   }
 
@@ -134,14 +139,28 @@ function MatchingMode({ deck, onExit }) {
     }
   }
 
-  if (round.length < 2) {
+  if (!groupId) {
     return (
       <div className="flex flex-col items-center gap-4 text-center">
-        <p className="text-off-white text-sm max-w-xs">
-          This group doesn't have enough cards yet to play matching mode. Add
-          a few more cards to a group in Manage decks first.
-        </p>
-        <button onClick={onExit} className="text-sm underline text-off-white">Back</button>
+        <p className="text-off-white text-sm">Choose a category</p>
+        {eligibleGroups.length === 0 ? (
+          <p className="text-off-white text-sm max-w-xs">
+            No category has enough cards yet. Add a few more cards to a group in Manage decks.
+          </p>
+        ) : (
+          <div className="flex gap-3 flex-wrap justify-center">
+            {eligibleGroups.map((g) => (
+              <button
+                key={g.id}
+                onClick={() => startCategory(g.id)}
+                className="px-4 py-2 rounded-lg bg-off-white text-blue text-sm"
+              >
+                {g.name}
+              </button>
+            ))}
+          </div>
+        )}
+        <button onClick={onExit} className="text-sm underline text-off-white">Change mode</button>
       </div>
     );
   }
@@ -161,6 +180,9 @@ function MatchingMode({ deck, onExit }) {
         </div>
       )}
 
+      <button onClick={() => setGroupId(null)} className="text-sm underline text-off-white">
+        Change category
+      </button>
       <button onClick={onExit} className="text-sm underline text-off-white">Change mode</button>
     </div>
   );

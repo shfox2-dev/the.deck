@@ -15,7 +15,7 @@ const ENTRANCES = [
   { href: "/duel", label: "Duel" },
 ];
 
-const cardShadow = "5px 0 2px 0 var(--color-green-dark)";
+const cardShadow = "0 0 2px 5px var(--color-green-dark)";
 
 // Builds one ordered list: [left half of the deck] + [3 entrances] + [right
 // half], with the entrances landing exactly in the middle. If the deck has
@@ -34,11 +34,11 @@ function buildSequence(deck) {
 // Angle (in degrees) between each pair of neighboring cards. Any gap that
 // touches an entrance card is wider, so the three entrances sit visibly
 // more spread out than the rest of the deck.
-const BASE_GAP_DEG = 4.5;
-const WIDE_GAP_DEG = 11;
+const BASE_GAP_DEG = 2.25;
+const WIDE_GAP_DEG = 5.5;
 // How far below the cards the fan's pivot point sits. Larger = flatter,
 // gentler curve; smaller = a more dramatic, tighter arc.
-const PIVOT_DISTANCE = 900;
+const PIVOT_DISTANCE = 450;
 
 function computeThetas(sequence) {
   const gaps = sequence.slice(0, -1).map((item, i) => {

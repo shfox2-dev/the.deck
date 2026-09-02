@@ -35,7 +35,7 @@ function buildSequence(deck) {
 // touches an entrance card is wider, so the three entrances sit visibly
 // more spread out than the rest of the deck.
 const BASE_GAP_DEG = 2.25;
-const WIDE_GAP_DEG = 5.5;
+const WIDE_GAP_DEG = 8;
 // How far below the cards the fan's pivot point sits. Larger = flatter,
 // gentler curve; smaller = a more dramatic, tighter arc.
 const PIVOT_DISTANCE = 450;
@@ -118,7 +118,7 @@ function DeckPageContent() {
   }
 
   return (
-    <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 sm:gap-10 px-6 py-12 sm:py-24 relative overflow-hidden">
+    <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 sm:gap-10 px-6 py-12 sm:py-24 relative overflow-visible">
       <Header />
 
       <ActiveUsersList deckId={deckId} deckName={deck.name} me={roster} />
@@ -149,7 +149,7 @@ function DeckPageContent() {
                   onMouseEnter={() => setHoveredKey(item.key)}
                   onMouseLeave={() => setHoveredKey(null)}
                   style={sharedStyle}
-                  className="w-60 h-[21rem] rounded-xl bg-off-white flex flex-col items-center justify-center gap-2 text-center"
+                  className="w-60 h-[21rem] rounded-xl bg-pink flex flex-col items-center justify-center gap-2 text-center"
                 >
                   <span className="text-4xl font-medium text-red px-2">{item.entrance.label}</span>
                 </Link>

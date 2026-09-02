@@ -89,7 +89,7 @@ function DeckPageContent() {
 
   if (loading) {
     return (
-      <main className="min-h-dvh bg-green-dark flex items-center justify-center">
+      <main className="h-dvh bg-green-dark flex items-center justify-center">
         <Header />
       </main>
     );
@@ -97,7 +97,7 @@ function DeckPageContent() {
 
   if (!deck) {
     return (
-      <main className="min-h-dvh bg-green-dark flex items-center justify-center px-6 text-center">
+      <main className="h-dvh bg-green-dark flex items-center justify-center px-6 text-center">
         <Header />
         <p className="text-off-white text-sm">
           That deck doesn't exist. <Link href="/" className="underline">Go back</Link>
@@ -118,7 +118,7 @@ function DeckPageContent() {
   }
 
   return (
-    <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 sm:gap-10 px-6 py-12 sm:py-24 relative overflow-hidden">
+    <main className="h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 sm:gap-10 px-6 py-12 sm:py-24 relative overflow-hidden">
       <Header />
 
       <ActiveUsersList deckId={deckId} deckName={deck.name} me={roster} />

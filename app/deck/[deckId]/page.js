@@ -124,7 +124,7 @@ function DeckPageContent() {
       <ActiveUsersList deckId={deckId} deckName={deck.name} me={roster} />
 
       <div className="hidden sm:block w-full overflow-x-auto">
-        <div className="relative mx-auto" style={{ width: "100%", maxWidth: 2200, height: 420 }}>
+        <div className="relative mx-auto" style={{ width: "100%", maxWidth: 1100, height: 600 }}>
           {sequence.map((item, i) => {
             const theta = thetas[i];
             const isHovered = hoveredKey === item.key;

@@ -24,7 +24,7 @@ const cardShadow = "5px 0 2px 0 var(--color-green-dark)";
 // desktop fan and the mobile swipe-through use this same order, so the
 // entrances land "in the middle" of the mobile sequence too.
 function buildSequence(deck) {
-  const leftCount = Math.floor(0);
+  const leftCount = Math.floor(deck.cards.length);
   const right = deck.cards.slice(leftCount).map((c) => ({ type: "card", key: c.id, card: c }));
   const entrances = ENTRANCES.map((e) => ({ type: "entrance", key: e.href, entrance: e }));
   return [...entrances, ...right];
@@ -37,7 +37,7 @@ const BASE_GAP_DEG = 4.5;
 const WIDE_GAP_DEG = 11;
 // How far below the cards the fan's pivot point sits. Larger = flatter,
 // gentler curve; smaller = a more dramatic, tighter arc.
-const PIVOT_DISTANCE = 1100;
+const PIVOT_DISTANCE = 900;
 
 function computeThetas(sequence) {
   const gaps = sequence.slice(0, -1).map((item, i) => {
@@ -123,7 +123,7 @@ function DeckPageContent() {
       <ActiveUsersList deckId={deckId} deckName={deck.name} me={roster} />
 
       <div className="hidden sm:block w-full overflow-x-auto">
-        <div className="relative mx-auto" style={{ perspective: 1200 }}>
+        <div className="relative mx-auto" style={{ perspective: 2400 }}>
           {sequence.map((item, i) => {
             const theta = thetas[i];
             const isHovered = hoveredKey === item.key;

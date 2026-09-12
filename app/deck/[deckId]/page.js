@@ -24,7 +24,7 @@ const cardShadow = "5px 0 2px 0 var(--color-green-dark)";
 // desktop fan and the mobile swipe-through use this same order, so the
 // entrances land "in the middle" of the mobile sequence too.
 function buildSequence(deck) {
-  const leftCount = Math.floor(deck.cards.length);
+  const leftCount = Math.floor(0);
   const right = deck.cards.slice(leftCount).map((c) => ({ type: "card", key: c.id, card: c }));
   const entrances = ENTRANCES.map((e) => ({ type: "entrance", key: e.href, entrance: e }));
   return [...entrances, ...right];

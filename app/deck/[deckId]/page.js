@@ -17,39 +17,6 @@ const ENTRANCES = [
 
 const cardShadow = "5px 0 2px 0 var(--color-green-dark)";
 
-// Builds one ordered list: [left half of the deck] + [3 entrances] + [right
-// half], with the entrances landing exactly in the middle. If the deck has
-// an odd number of cards, the right side gets the extra one, per the
-// decision to just pick a side rather than leave it ambiguous. Both the
-// desktop fan and the mobile swipe-through use this same order, so the
-// entrances land "in the middle" of the mobile sequence too.
-function buildSequence(deck) {
-  const leftCount = Math.floor(deck.cards.length);
-  const right = deck.cards.slice(leftCount).map((c) => ({ type: "card", key: c.id, card: c }));
-  const entrances = ENTRANCES.map((e) => ({ type: "entrance", key: e.href, entrance: e }));
-  return [...entrances, ...right];
-}
-
-// Angle (in degrees) between each pair of neighboring cards. Any gap that
-// touches an entrance card is wider, so the three entrances sit visibly
-// more spread out than the rest of the deck.
-const BASE_GAP_DEG = 4.5;
-const WIDE_GAP_DEG = 11;
-// How far below the cards the fan's pivot point sits. Larger = flatter,
-// gentler curve; smaller = a more dramatic, tighter arc.
-const PIVOT_DISTANCE = 900;
-
-function computeThetas(sequence) {
-  const gaps = sequence.slice(0, -1).map((item, i) => {
-    const next = sequence[i + 1];
-    return next.type === "entrance" ? WIDE_GAP_DEG : BASE_GAP_DEG;
-  });
-  const cum = [0];
-  gaps.forEach((g) => cum.push(cum[cum.length - 1] + g));
-  const total = cum[cum.length - 1];
-  return cum.map((c) => c - total / 2);
-}
-
 export default function DeckPage() {
   return (
     <AuthGate>
@@ -86,6 +53,8 @@ function DeckPageContent() {
     setActiveDeckId(deckId);
   }, [deckId]);
 
+  const CARD_WIDTH = 240;
+
   if (loading) {
     return (
       <main className="min-h-dvh bg-green-dark flex items-center justify-center">
@@ -105,8 +74,9 @@ function DeckPageContent() {
     );
   }
 
-  const sequence = buildSequence(deck);
-  const thetas = computeThetas(sequence);
+  const DECK_SPACE = deck.cards.length * CARD_WIDTH;
+  const OVERLAP_PX = CARD_WIDTH - 124 * CARD_WIDTH / DECK_SPACE;
+  const ENTRANCE_OVERLAP_PX = 200;
 
   function toggleFlip(cardId) {
     setFlipped((prev) => {
@@ -122,49 +92,41 @@ function DeckPageContent() {
 
       <ActiveUsersList deckId={deckId} deckName={deck.name} me={roster} />
 
-      <div className="hidden sm:block w-full overflow-x-auto">
-        <div className="relative mx-auto" style={{ perspective: 2400 }}>
-          {sequence.map((item, i) => {
-            const theta = thetas[i];
-            const isHovered = hoveredKey === item.key;
-            // Cards nearer the center (smaller |theta|) sit visually on top.
-            const baseZ = Math.round(500 - Math.abs(theta));
-            const sharedStyle = {
-              position: "absolute",
-              left: "50%",
-              bottom: 0,
-              transformOrigin: `50% ${PIVOT_DISTANCE}px`,
-              transform: `translateX(-50%) rotate(${theta}deg) ${isHovered ? "translateY(-24px)" : ""}`,
-              zIndex: isHovered ? 999 : baseZ,
-              boxShadow: cardShadow,
-              transition: "transform 200ms ease-out",
-            };
-
-            if (item.type === "entrance") {
-              return (
-                <Link
-                  key={item.key}
-                  href={item.entrance.href}
-                  onMouseEnter={() => setHoveredKey(item.key)}
-                  onMouseLeave={() => setHoveredKey(null)}
-                  style={sharedStyle}
-                  className="w-60 h-[21rem] rounded-xl bg-off-white flex flex-col items-center justify-center gap-2 text-center"
-                >
-                  <span className="text-4xl font-medium text-red px-2">{item.entrance.label}</span>
-                </Link>
-              );
-            }
-
-            const card = item.card;
+      <div className="hidden sm:block w-full overflow-x-auto" style={{ perspective: 1200 }}>
+        <div className="flex px-8 py-8 w-max mx-auto">
+          {ENTRANCES.map((e, i) => (
+            <Link
+              key={e.href}
+              href={e.href}
+              onMouseEnter={() => setHoveredKey(e.href)}
+              onMouseLeave={() => setHoveredKey(null)}
+              style={{
+                marginLeft: i === 0 ? 0 : -ENTRANCE_OVERLAP_PX,
+                zIndex: hoveredKey === e.href ? 999 : deck.cards.length + 3 - i,
+                boxShadow: cardShadow,
+              }}
+              className="relative w-60 h-[21rem] rounded-xl bg-pink
+                         flex flex-col items-center justify-center gap-2 text-center shrink-0
+                         transition-transform duration-200 ease-out hover:-translate-y-6"
+            >
+              <span className="text-4xl font-medium text-red px-2">{e.label}</span>
+            </Link>
+          ))}
+          {deck.cards.map((card, i) => {
             const isFlipped = flipped.has(card.id);
             return (
               <div
-                key={item.key}
-                onMouseEnter={() => setHoveredKey(item.key)}
+                key={card.id}
+                onMouseEnter={() => setHoveredKey(card.id)}
                 onMouseLeave={() => setHoveredKey(null)}
                 onClick={() => toggleFlip(card.id)}
-                style={sharedStyle}
-                className="w-60 h-[21rem] rounded-xl cursor-pointer"
+                style={{
+                  marginLeft: -OVERLAP_PX,
+                  zIndex: hoveredKey === card.id ? 999 : deck.cards.length - i,
+                  boxShadow: cardShadow,
+                }}
+                className="relative w-60 h-[21rem] rounded-xl shrink-0 cursor-pointer
+                           transition-transform duration-200 ease-out hover:-translate-y-6"
               >
                 <div
                   style={{
@@ -172,7 +134,7 @@ function DeckPageContent() {
                     transformStyle: "preserve-3d",
                     transition: "transform 0.5s",
                   }}
-                  className="relative w-full h-full"
+                  className="absolute inset-0"
                 >
                   <div
                     style={{ backfaceVisibility: "hidden" }}
@@ -193,12 +155,16 @@ function DeckPageContent() {
         </div>
       </div>
 
-      <MobileDeck sequence={sequence} flipped={flipped} onToggleFlip={toggleFlip} />
+      <MobileDeck deck={deck} flipped={flipped} onToggleFlip={toggleFlip} />
     </main>
   );
 }
 
-function MobileDeck({ sequence, flipped, onToggleFlip }) {
+function MobileDeck({ deck, flipped, onToggleFlip }) {
+  const items = [
+    ...ENTRANCES.map((e) => ({ type: "entrance", ...e })),
+    ...deck.cards.map((c) => ({ type: "card", ...c })),
+  ];
   const [index, setIndex] = useState(0);
   const touchX = useRef(0);
 
@@ -207,12 +173,12 @@ function MobileDeck({ sequence, flipped, onToggleFlip }) {
   }
   function onTouchEnd(e) {
     const dx = e.changedTouches[0].clientX - touchX.current;
-    if (dx < -40) setIndex((i) => Math.min(i + 1, sequence.length - 1));
+    if (dx < -40) setIndex((i) => Math.min(i + 1, items.length - 1));
     else if (dx > 40) setIndex((i) => Math.max(i - 1, 0));
   }
 
-  const item = sequence[index];
-  const isFlipped = item.type === "card" && flipped.has(item.card.id);
+  const item = items[index];
+  const isFlipped = item.type === "card" && flipped.has(item.id);
 
   return (
     <div
@@ -223,15 +189,15 @@ function MobileDeck({ sequence, flipped, onToggleFlip }) {
     >
       {item.type === "entrance" ? (
         <Link
-          href={item.entrance.href}
+          href={item.href}
           style={{ boxShadow: cardShadow }}
           className="relative w-60 h-[21rem] rounded-xl bg-off-white flex items-center justify-center text-center px-3"
         >
-          <span className="text-4xl font-medium text-red px-2">{item.entrance.label}</span>
+          <span className="text-4xl font-medium text-red px-2">{item.label}</span>
         </Link>
       ) : (
         <div
-          onClick={() => onToggleFlip(item.card.id)}
+          onClick={() => onToggleFlip(item.id)}
           style={{ boxShadow: cardShadow }}
           className="relative w-60 h-[21rem] rounded-xl cursor-pointer"
         >
@@ -247,19 +213,19 @@ function MobileDeck({ sequence, flipped, onToggleFlip }) {
               style={{ backfaceVisibility: "hidden" }}
               className="absolute inset-0 rounded-xl bg-off-white flex items-center justify-center text-center px-3"
             >
-              <span className="text-4xl font-medium text-blue">{item.card.word}</span>
+              <span className="text-4xl font-medium text-blue">{item.word}</span>
             </div>
             <div
               style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
               className="absolute inset-0 rounded-xl bg-off-white flex items-center justify-center text-center px-3"
             >
-              <span className="text-xl text-blue">{item.card.definition}</span>
+              <span className="text-xl text-blue">{item.definition}</span>
             </div>
           </div>
         </div>
       )}
       <p className="text-xs text-off-white">
-        {index + 1} / {sequence.length} · swipe to browse
+        {index + 1} / {items.length} · swipe to browse
       </p>
     </div>
   );

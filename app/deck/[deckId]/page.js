@@ -15,7 +15,7 @@ const ENTRANCES = [
   { href: "/duel", label: "Duel" },
 ];
 
-const cardShadow = "0 0 2px 5px var(--color-green-dark)";
+const cardShadow = "5px 0 2px 0 var(--color-green-dark)";
 
 // Builds one ordered list: [left half of the deck] + [3 entrances] + [right
 // half], with the entrances landing exactly in the middle. If the deck has
@@ -24,26 +24,25 @@ const cardShadow = "0 0 2px 5px var(--color-green-dark)";
 // desktop fan and the mobile swipe-through use this same order, so the
 // entrances land "in the middle" of the mobile sequence too.
 function buildSequence(deck) {
-  const leftCount = Math.floor(deck.cards.length / 2);
-  const left = deck.cards.slice(0, leftCount).map((c) => ({ type: "card", key: c.id, card: c }));
+  const leftCount = Math.floor(deck.cards.length);
   const right = deck.cards.slice(leftCount).map((c) => ({ type: "card", key: c.id, card: c }));
   const entrances = ENTRANCES.map((e) => ({ type: "entrance", key: e.href, entrance: e }));
-  return [...left, ...entrances, ...right];
+  return [...entrances, ...right];
 }
 
 // Angle (in degrees) between each pair of neighboring cards. Any gap that
 // touches an entrance card is wider, so the three entrances sit visibly
 // more spread out than the rest of the deck.
-const BASE_GAP_DEG = 2.25;
-const WIDE_GAP_DEG = 8;
+const BASE_GAP_DEG = 4.5;
+const WIDE_GAP_DEG = 11;
 // How far below the cards the fan's pivot point sits. Larger = flatter,
 // gentler curve; smaller = a more dramatic, tighter arc.
-const PIVOT_DISTANCE = 450;
+const PIVOT_DISTANCE = 1100;
 
 function computeThetas(sequence) {
   const gaps = sequence.slice(0, -1).map((item, i) => {
     const next = sequence[i + 1];
-    return item.type === "entrance" || next.type === "entrance" ? WIDE_GAP_DEG : BASE_GAP_DEG;
+    return next.type === "entrance" ? WIDE_GAP_DEG : BASE_GAP_DEG;
   });
   const cum = [0];
   gaps.forEach((g) => cum.push(cum[cum.length - 1] + g));
@@ -89,7 +88,7 @@ function DeckPageContent() {
 
   if (loading) {
     return (
-      <main className="h-dvh bg-green-dark flex items-center justify-center">
+      <main className="min-h-dvh bg-green-dark flex items-center justify-center">
         <Header />
       </main>
     );
@@ -97,7 +96,7 @@ function DeckPageContent() {
 
   if (!deck) {
     return (
-      <main className="h-dvh bg-green-dark flex items-center justify-center px-6 text-center">
+      <main className="min-h-dvh bg-green-dark flex items-center justify-center px-6 text-center">
         <Header />
         <p className="text-off-white text-sm">
           That deck doesn't exist. <Link href="/" className="underline">Go back</Link>
@@ -118,13 +117,13 @@ function DeckPageContent() {
   }
 
   return (
-    <main className="h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 sm:gap-10 px-6 py-12 sm:py-24 relative overflow-hidden">
+    <main className="min-h-dvh bg-green-dark flex flex-col items-center justify-center gap-6 sm:gap-10 px-6 py-12 sm:py-24 relative overflow-hidden">
       <Header />
 
       <ActiveUsersList deckId={deckId} deckName={deck.name} me={roster} />
 
       <div className="hidden sm:block w-full overflow-x-auto">
-        <div className="relative mx-auto" style={{ width: "100%", maxWidth: 1100, height: 300 }}>
+        <div className="relative mx-auto" style={{ perspective: 1200 }}>
           {sequence.map((item, i) => {
             const theta = thetas[i];
             const isHovered = hoveredKey === item.key;
@@ -149,7 +148,7 @@ function DeckPageContent() {
                   onMouseEnter={() => setHoveredKey(item.key)}
                   onMouseLeave={() => setHoveredKey(null)}
                   style={sharedStyle}
-                  className="w-60 h-[21rem] rounded-xl bg-pink flex flex-col items-center justify-center gap-2 text-center"
+                  className="w-60 h-[21rem] rounded-xl bg-off-white flex flex-col items-center justify-center gap-2 text-center"
                 >
                   <span className="text-4xl font-medium text-red px-2">{item.entrance.label}</span>
                 </Link>
